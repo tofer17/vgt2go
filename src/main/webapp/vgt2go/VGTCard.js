@@ -86,7 +86,7 @@ class VGTCard extends VGTComponent {
 	}
 
 	static MakeJoker ( rank ) {
-		return new VGTCard( new VGTRank( rank, "Joker " + rank, 100+rank ), JOKER_SUIT );
+		return new VGTCard( new VGTRank( rank, "Joker " + rank, 100 + rank ), JOKER_SUIT );
 	};
 }
 

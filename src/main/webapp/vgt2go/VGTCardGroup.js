@@ -75,9 +75,7 @@ class VGTCardGroup extends VGTComponent {
 		const cards = [];
 		for ( let suit of VGTCard.SUITS ) {
 			for ( let rank of VGTCard.RANKS ) {
-				//if ( suit.id != "X" && rank.id != "X" ) {
 					cards.push( new VGTCard( rank, suit ) );
-				//}
 			}
 		}
 		cards.push( VGTCard.MakeJoker( 1 ) );
