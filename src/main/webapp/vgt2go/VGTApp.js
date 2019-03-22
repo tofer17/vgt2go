@@ -29,7 +29,7 @@ class VGTApp extends VGTComponent {
 		this.game = game.launch( this );
 		this.gameDiv.innerHTML = "";
 		this.gameDiv.appendChild( this.game.node );
-		this.game.start();
+		this.game.setup();
 	};
 
 	handleEvent ( event ) {

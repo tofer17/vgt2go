@@ -21,10 +21,16 @@ class VGTPINPad extends VGTComponent {
 		this.ok.disabled = true;
 
 		this.prev = document.createElement( "button" );
-		//this.prev.disabled = true;
+		Object.defineProperty( this.prev, "enabled", {
+			get () { return !this.disabled; },
+			set ( enabled ) { this.disabled = !enabled; }
+		});
 
 		this.next = document.createElement( "button" );
-		//this.next.disabled = true;
+		Object.defineProperty( this.next, "enabled", {
+			get () { return !this.disabled; },
+			set ( enabled ) { this.disabled = !enabled; }
+		});
 
 		const t = document.createElement( "table" );
 		let tr, td, b;

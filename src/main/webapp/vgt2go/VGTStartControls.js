@@ -48,6 +48,25 @@ class VGTStartControls extends VGTComponent {
 		});
 		this.node.appendChild( btn4 );
 		this.cancelGame = btn4;
+
+		const btn5 = document.createElement( "button" );
+		btn5.innerHTML = "Delete";
+		btn5.addEventListener( "click", this, false );
+		Object.defineProperty( btn5, "enabled", {
+			get () { return !btn5.disabled },
+			set ( enabled ) { btn5.disabled = !enabled; }
+		});
+		this.node.appendChild( btn5 );
+		this.deletePlayer = btn5;
+	};
+
+	update () {
+		const piOk = this.game.playerInfo.isValid;
+		this.previousPlayer.enabled = piOk && this.game.players.length > 1;
+		this.nextPlayer.enabled = piOk && this.game.currentPlayer <= this.game.gameOpts.opts.maxplayers.value;
+		this.startGame.enabled = piOk && this.game.players.length >= this.game.gameOpts.opts.minplayers.value;
+		this.deletePlayer.enabled = this.game.currentPlayer != 0;
+
 	};
 
 	handleEvent ( event ) {
@@ -62,6 +81,9 @@ class VGTStartControls extends VGTComponent {
 			evt = new Event( "start" );
 		} else if ( event.target == this.cancelGame ) {
 			evt = new Event( "cancel" );
+		} else if ( event.target == this.deletePlayer ) {
+			console.log("ggg");
+			evt = new Event( "delete" );
 		}
 
 		if ( evt != null ) {
