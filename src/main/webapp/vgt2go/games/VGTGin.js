@@ -7,6 +7,7 @@ import { VGTGameOpts } from "../VGTGameOpts.js";
 import { VGTPlayer } from "../VGTPlayer.js";
 import { VGTPlayerInfo } from "../VGTPlayerInfo.js";
 import { VGTStartControls } from "../VGTStartControls.js";
+import { VGTPINPad } from "../VGTPINPad.js";
 
 class VGTGinGameOpts extends VGTGameOpts {
 	constructor ( game ) {
@@ -70,11 +71,15 @@ class VGTGin extends VGTComponent {
 		this.gameOpts.addEventListener( "change", this, false );
 
 		this.startControls = new VGTStartControls( this );
-
 		this.startControls.addEventListener( "previous", this, false );
 		this.startControls.addEventListener( "next", this, false );
 		this.startControls.addEventListener( "start", this, false );
 		this.startControls.addEventListener( "cancel", this, false );
+
+		this.pinPad = new VGTPINPad();
+		this.pinPad.addEventListener( "done", this, false );
+		this.pinPad.addEventListener( "previous", this, false );
+		this.pinPad.addEventListener( "next", this, false );
 
 		this.node.appendChild( document.createTextNode( "Gin" ) );
 		this.node.appendChild( document.createElement( "hr" ) );
@@ -83,6 +88,8 @@ class VGTGin extends VGTComponent {
 		this.node.appendChild( this.gameOpts.node );
 		this.node.appendChild( document.createElement( "hr" ) );
 		this.node.appendChild( this.startControls.node );
+
+		this.node.appendChild( this.pinPad.node );
 
 	};
 
@@ -100,10 +107,11 @@ class VGTGin extends VGTComponent {
 
 		//const pi = new VGTPlayerInfo();
 		this.playerInfo.setPlayer( this.players[ this.currentPlayer ] );
+		this.whackStartControls();
 
-		this.startControls.previousPlayer.disabled = true;
-		this.startControls.nextPlayer.disabled = true;
-		this.startControls.startGame.disabled = true;
+		//this.startControls.previousPlayer.disabled = true;
+		//this.startControls.nextPlayer.disabled = true;
+		//this.startControls.startGame.disabled = true;
 		// Get players
 		//const go = new VGTGinGameOpts( this );
 		//this.node.appendChild( go.node );
@@ -114,11 +122,24 @@ class VGTGin extends VGTComponent {
 		//const sc = new VGTStartControls( this );
 	};
 
+	//get hasEnoughPlayers () {
+	//	return this.players.length >= this.gameOpts.opts.minplayers.value && this.players.length <= this.gameOpts.opts.maxplayers.value;
+	//};
+
+	whackStartControls () {
+		const piOk = this.playerInfo.isValid;
+		const sc = this.startControls;
+		sc.previousPlayer.enabled = piOk && this.currentPlayer > 0;
+		sc.nextPlayer.enabled = piOk && this.currentPlayer <= this.gameOpts.opts.maxplayers.value;
+		sc.startGame.enabled = piOk && this.players.length >= this.gameOpts.opts.minplayers.value;
+
+		this.gameOpts.enabled = this.currentPlayer == 0;
+	};
+
 	handleEvent ( event ) {
 		const cp = this.players[ this.currentPlayer ];
 		if ( event.target == this.playerInfo ) {
-			this.startControls.nextPlayer.disabled = cp.name.length < 1 || cp.pin.length < 1;
-			this.startControls.startGame.disabled = this.players.length < this.gameOpts.opts.minplayers.value;
+			this.whackStartControls();
 		} else if ( event.type == "next" ) {
 			if ( this.currentPlayer + 1 == this.players.length ) {
 				console.log("yo");
@@ -126,10 +147,46 @@ class VGTGin extends VGTComponent {
 				const newPlayer = new VGTPlayer( "Player " + (this.currentPlayer + 1), "" );
 				this.players.push( newPlayer );
 				this.playerInfo.setPlayer( newPlayer);
-				this.startControls.nextPlayer.disabled = true;
-				this.startControls.previousPlayer.disabled = false;
-				this.startControls.startGame.disabled = this.players.length < this.gameOpts.opts.minplayers.value;
+				this.whackStartControls();
+			} else {
+				this.currentPlayer++;
+				this.playerInfo.visible = false;
+				this.gameOpts.visible = false;
+				this.startControls.visible = false;
+				if ( this.players[ this.currentPlayer ].pin.length > 0 ) {
+					this.pinPad.setControlsVisible( true );
+					this.pinPad.validate( this.players[ this.currentPlayer ].name, this.players[ this.currentPlayer ].pin, null );
+				}
 			}
+
+		} else if ( event.type == "previous" ) {
+
+			this.playerInfo.visible = false;
+			this.gameOpts.visible = false;
+			this.startControls.visible = false;
+
+			this.currentPlayer--;
+			if ( this.currentPlayer < 0 ) {
+				this.currentPlayer = this.players.length - 1;
+			}
+
+			const cp = this.players[ this.currentPlayer ];
+
+			if ( cp.pin.length > 0 ) {
+				this.pinPad.setControlsVisible( true );
+				this.pinPad.validate( this.players[ this.currentPlayer ].name, cp.pin, console.log() );
+			}
+
+
+		} else if ( event.type == "done" ) {
+			const cp = this.players[ this.currentPlayer ];
+			this.playerInfo.setPlayer( cp );
+			this.playerInfo.visible = true;
+			this.gameOpts.visible = true;
+			this.gameOpts.enabled = this.currentPlayer == 0;
+			this.startControls.visible = true;
+			this.whackStartControls();
+
 		}
 		console.log("ingin", event );
 	}

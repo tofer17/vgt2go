@@ -9,25 +9,45 @@ class VGTStartControls extends VGTComponent {
 
 		this.game = game;
 
-		this.previousPlayer = document.createElement( "button" );
-		this.previousPlayer.innerHTML = "Previous Player";
-		this.previousPlayer.addEventListener( "click", this, false );
-		this.node.appendChild( this.previousPlayer );
+		const btn1 = document.createElement( "button" );
+		btn1.innerHTML = "Previous Player";
+		btn1.addEventListener( "click", this, false );
+		Object.defineProperty( btn1, "enabled", {
+			get () { return !btn1.disabled },
+			set ( enabled ) { btn1.disabled = !enabled; }
+		});
+		this.node.appendChild( btn1 );
+		this.previousPlayer = btn1;
 
-		this.nextPlayer = document.createElement( "button" );
-		this.nextPlayer.innerHTML = "Next Player";
-		this.nextPlayer.addEventListener( "click", this, false );
-		this.node.appendChild( this.nextPlayer );
+		const btn2 = document.createElement( "button" );
+		btn2.innerHTML = "Next Player";
+		btn2.addEventListener( "click", this, false );
+		Object.defineProperty( btn2, "enabled", {
+			get () { return !btn2.disabled },
+			set ( enabled ) { btn2.disabled = !enabled; }
+		});
+		this.node.appendChild( btn2 );
+		this.nextPlayer = btn2;
 
-		this.startGame = document.createElement( "button" );
-		this.startGame.innerHTML = "Start";
-		this.startGame.addEventListener( "click", this, false );
-		this.node.appendChild( this.startGame );
+		const btn3 = document.createElement( "button" );
+		btn3.innerHTML = "Start";
+		btn3.addEventListener( "click", this, false );
+		Object.defineProperty( btn3, "enabled", {
+			get () { return !btn3.disabled },
+			set ( enabled ) { btn3.disabled = !enabled; }
+		});
+		this.node.appendChild( btn3 );
+		this.startGame = btn3;
 
-		this.cancelGame = document.createElement( "button" );
-		this.cancelGame.innerHTML = "Cancel";
-		this.cancelGame.addEventListener( "click", this, false );
-		this.node.appendChild( this.cancelGame );
+		const btn4 = document.createElement( "button" );
+		btn4.innerHTML = "Cancel";
+		btn4.addEventListener( "click", this, false );
+		Object.defineProperty( btn4, "enabled", {
+			get () { return !btn4.disabled },
+			set ( enabled ) { btn4.disabled = !enabled; }
+		});
+		this.node.appendChild( btn4 );
+		this.cancelGame = btn4;
 	};
 
 	handleEvent ( event ) {

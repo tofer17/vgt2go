@@ -32,6 +32,10 @@ class VGTPlayerInfo extends VGTComponent {
 		this.node.appendChild( this.pin );
 	};
 
+	get isValid () {
+		return this.name.value.length > 0 && this.pin.value.length > 0;
+	};
+
 	get enabled () {
 		return (!this.name.disabled) && (!this.pin.disabled);
 	};
