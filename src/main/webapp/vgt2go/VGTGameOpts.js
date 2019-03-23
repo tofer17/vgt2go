@@ -152,7 +152,7 @@ class VGTGameOpts extends VGTComponent {
 		return node;
 	};
 
-	layout () {
+	init () {
 		for ( let optKey in this.opts ) {
 			this.node.appendChild( this.makeOpt( this.opts[optKey] ) );
 		}
