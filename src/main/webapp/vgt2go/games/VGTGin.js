@@ -2,9 +2,53 @@
  *
  */
 
+import { VGTComponent } from "../VGTComponent.js";
 import { VGTGame } from "./VGTGame.js";
 import { VGTCardGroup } from "../VGTCardGroup.js";
 import { VGTPlayer } from "../VGTPlayer.js";
+
+class VGTTable extends VGTComponent {
+	constructor () {
+		super( "div", "vgttable" );
+	};
+}
+
+class VGTCardTable extends VGTTable {
+	constructor () {
+		super();
+	};
+}
+
+class VGTGinTable extends VGTCardTable {
+	constructor ( stockPile, discardPile ) {
+		super();
+
+		this.stockPile = stockPile;
+		this.discardPile = discardPile;
+		this.playerHand = document.createElement( "div" );
+	};
+
+	init () {
+		super.init();
+
+		this.node.appendChild( document.createTextNode( "s" ) );
+		this.node.appendChild( this.stockPile.node );
+
+		this.node.appendChild( document.createTextNode( "d" ) );
+		this.node.appendChild( this.discardPile.node );
+
+		this.node.appendChild( document.createTextNode( "p" ) );
+		this.node.appendChild( this.playerHand );
+
+		this.stockPile.addEventListener( "change", this, false );
+		this.discardPile.addEventListener( "change", this, false );
+	};
+
+	setPlayerHand ( playerHand ) {
+		this.playerHand.innerHTML = "";
+		this.playerHand.appendChild( playerHand.node );
+	};
+}
 
 class VGTGin extends VGTGame {
 	constructor ( app ) {
@@ -48,7 +92,7 @@ class VGTGin extends VGTGame {
 		this.gameOpts.opts.maxPlayers.value = 5;
 
 		this.deck = null;
-		this.discard = null;
+		this.discards = null;
 		this.table = null;
 	};
 
@@ -78,17 +122,26 @@ class VGTGin extends VGTGame {
 		let i = 0;
 		for ( let player of this.players ) {
 			player.hand = new VGTCardGroup (
-				"vgtjinplayerhand" + i++,
+				"vgtginplayerhand" + i++,
 				VGTCardGroup.TYPES.RTL,
 				...this.deck.deal( 10 )
 			);
 		}
+
+		this.discards = new VGTCardGroup( "vgtgindiscards", VGTCardGroup.TYPES.FaceUp );
+
+		console.log( this.deck,this.discards  );
 
 		if ( this.gameOpts.opts.deal.value == 0 ) {
 			this.players[ this.currentPlayer ].hand.add( this.deck.deal( 1 ) );
 		} else {
 
 		}
+
+		this.table = new VGTGinTable( this.deck, this.discards );
+		this.table.setPlayerHand( this.players[ this.currentPlayer ].hand );
+
+		this.node.appendChild( this.table.node );
 
 	};
 

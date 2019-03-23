@@ -4,7 +4,7 @@
 import { VGTComponent  } from "./VGTComponent.js";
 import { VGTCard } from "./VGTCard.js";
 
-const _TYPES = {FaceDown : "FD", RTL : "RTL", FaceUp : "FU" };
+const _TYPES = { FaceDown : "FD", RTL : "RTL", FaceUp : "FU" };
 
 class VGTCardGroup extends VGTComponent {
 	constructor ( id, type, ...cards ) {
@@ -21,6 +21,28 @@ class VGTCardGroup extends VGTComponent {
 		if ( this.type != null ) {
 			this.node.classList.add( this.type );
 		}
+	};
+
+	init () {
+		const tab = document.createElement( "table" );
+		const tr = tab.insertRow();
+		let td;
+
+		if ( this.type == _TYPES.FaceDown ) {
+			td = tr.insertCell();
+			td.innerHTML = "[#]";
+		} else if ( this.type == _TYPES.FaceUp ) {
+			td = tr.insertCell();
+			td.innerHTML = "[X]";
+			console.error("F");
+		} else if ( this.type == _TYPES.RTL ) {
+			for ( let card of this.cards ) {
+				td = tr.insertCell();
+				td.innerHTML = card.toString();
+			}
+		}
+
+		this.node.append( tab );
 	};
 
 	removeJokers () {
