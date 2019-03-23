@@ -39,21 +39,19 @@ class VGTGin extends VGTGame {
 			value : 0
 		};
 
-		this.gameOpts.opts.minplayers.opts = [ 2, 5 ];
-		this.gameOpts.opts.minplayers.value = 3;
+		this.gameOpts.opts.minPlayers.opts = [ 2, 5 ];
+		this.gameOpts.opts.minPlayers.value = 3;
 
-		this.gameOpts.opts.maxplayers.opts = [ 2, 5 ];
-		this.gameOpts.opts.maxplayers.value = 5;
-
-		//this.init();
+		this.gameOpts.opts.maxPlayers.opts = [ 2, 5 ];
+		this.gameOpts.opts.maxPlayers.value = 5;
 
 	};
 
 	init () {
 		super.init();
 
-		this.gameOpts.opts.minplayers.visible = false;
-		this.gameOpts.opts.maxplayers.visible = false;
+		this.gameOpts.opts.minPlayers.visible = false;
+		this.gameOpts.opts.maxPlayers.visible = false;
 	}
 
 	start () {

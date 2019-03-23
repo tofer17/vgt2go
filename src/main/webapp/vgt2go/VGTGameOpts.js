@@ -11,7 +11,7 @@ class VGTGameOpts extends VGTComponent {
 		this.game = game;
 		this.opts = {};
 
-		this.opts.minplayers = {
+		this.opts.minPlayers = {
 			id : "minplayers",
 			text : "Minimum Players",
 			type : "number",
@@ -19,7 +19,7 @@ class VGTGameOpts extends VGTComponent {
 			opts : [ 0, null ]
 		};
 
-		this.opts.maxplayers = {
+		this.opts.maxPlayers = {
 			id : "maxplayers",
 			text : "Maximum Players",
 			type : "number",
@@ -27,7 +27,7 @@ class VGTGameOpts extends VGTComponent {
 			opts : [ 0, null ]
 		};
 
-		this.opts.seltest = {
+		this.opts.selTest = {
 			id : "sletest",
 			text : "SelTest",
 			type : "select",
@@ -35,7 +35,7 @@ class VGTGameOpts extends VGTComponent {
 			opts : [ "one", "two", "three", "four" ]
 		};
 
-		this.opts.radtest = {
+		this.opts.radTest = {
 			id : "radtest",
 			text : "RadTest",
 			type : "radio",
@@ -156,7 +156,7 @@ class VGTGameOpts extends VGTComponent {
 		for ( let optKey in this.opts ) {
 			this.node.appendChild( this.makeOpt( this.opts[optKey] ) );
 		}
-	}
+	};
 
 	update () {
 
@@ -167,7 +167,7 @@ class VGTGameOpts extends VGTComponent {
 		const evt = new Event( "change" );
 		evt.gameOpt = event.target.gameOpt
 		this.dispatchEvent( evt );
-	}
+	};
 }
 
 

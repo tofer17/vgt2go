@@ -19,23 +19,12 @@ class VGTGame extends VGTComponent {
 		this.currentPlayer = null;
 
 		this.playerInfo = new VGTPlayerInfo();
-		this.playerInfo.addEventListener( "change", this, false );
 
 		this.gameOpts = new VGTGameOpts( this );
-		this.gameOpts.addEventListener( "change", this, false );
 
 		this.startControls = new VGTStartControls( this );
-		this.startControls.addEventListener( "previous", this, false );
-		this.startControls.addEventListener( "next", this, false );
-		this.startControls.addEventListener( "start", this, false );
-		this.startControls.addEventListener( "cancel", this, false );
-		this.startControls.addEventListener( "delete", this, false );
 
 		this.pinPad = new VGTPINPad();
-		this.pinPad.addEventListener( "done", this, false );
-		this.pinPad.addEventListener( "previous", this, false );
-		this.pinPad.addEventListener( "next", this, false );
-
 	};
 
 	init () {
@@ -48,6 +37,20 @@ class VGTGame extends VGTComponent {
 		this.node.appendChild( this.startControls.node );
 
 		this.node.appendChild( this.pinPad.node );
+
+		this.playerInfo.addEventListener( "change", this, false );
+
+		this.gameOpts.addEventListener( "change", this, false );
+
+		this.startControls.addEventListener( "previous", this, false );
+		this.startControls.addEventListener( "next", this, false );
+		this.startControls.addEventListener( "start", this, false );
+		this.startControls.addEventListener( "cancel", this, false );
+		this.startControls.addEventListener( "delete", this, false );
+
+		this.pinPad.addEventListener( "done", this, false );
+		this.pinPad.addEventListener( "previous", this, false );
+		this.pinPad.addEventListener( "next", this, false );
 	};
 
 	getPlayers () {
@@ -67,6 +70,7 @@ class VGTGame extends VGTComponent {
 	};
 
 	shiftCurrentPlayer ( dir, allowNew ) {
+
 		this.playerInfo.visible = false;
 		this.gameOpts.visible = false;
 		this.startControls.visible = false;
@@ -75,11 +79,11 @@ class VGTGame extends VGTComponent {
 
 		if ( this.currentPlayer < 0 ) {
 			this.currentPlayer = this.players.length - 1;
-		} else if ( allowNew && this.currentPlayer >= this.players.length && this.currentPlayer <= this.gameOpts.opts.maxplayers.value ) {
+		} else if ( allowNew && this.currentPlayer >= this.players.length && this.currentPlayer <= this.gameOpts.opts.maxPlayers.value ) {
 			this.players.push( new VGTPlayer( "", "" ) );
 		} else if ( !allowNew && this.currentPlayer >= this.players.length ) {
 			this.currentPlayer = 0;
-		} else if ( this.currentPlayer > this.gameOpts.opts.maxplayers.value ) {
+		} else if ( this.currentPlayer > this.gameOpts.opts.maxPlayers.value ) {
 			this.currentPlayer = 0;
 		}
 
@@ -117,7 +121,6 @@ class VGTGame extends VGTComponent {
 			this.shiftCurrentPlayer( -1 );
 		} else if ( event.type == "start" ) {
 			if ( this.currentPlayer != 0 ) {
-				console.log( "return to host");
 				this.shiftCurrentPlayer( -this.currentPlayer );
 			} else {
 				this.start();
