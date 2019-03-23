@@ -42,6 +42,17 @@ class VGTSuit extends VGTCardBase {
 	get color () {
 		return this.id == "D" || this.id == "H" ? "red" : (this.id == "C" || this.id == "S" ? "black" : "joker");
 	};
+
+	get char () {
+		switch ( this.id ) {
+			case "C" : return "&clubs;";
+			case "D" : return "&diams;";
+			case "H" : return "&hearts;";
+			case "S" : return "&spades;";
+			case "X" : return "&#9786;";
+			default : return "?";
+		}
+	};
 }
 
 const SUITS = [];
@@ -51,6 +62,8 @@ SUITS.push( new VGTSuit( "H", "Hearts", 3 ) );
 SUITS.push( new VGTSuit( "S", "Spades", 4 ) );
 
 const JOKER_SUIT = new VGTSuit( "X", "Joker", 100 );
+const EMPTY_SUIT = new VGTSuit( ".", "Empty", 101 );
+const BACK_SUIT = new VGTSuit( ".", "Back", 101 );
 
 class VGTCard extends VGTComponent {
 	constructor ( rank, suit ) {
@@ -65,8 +78,48 @@ class VGTCard extends VGTComponent {
 		Object.defineProperty( this, "id", { value: rank.id + suit.id } );
 	};
 
-	update () {
-		this.node.innerHTML = this.id;
+	init () {
+
+		if ( this.suit == BACK_SUIT ) {
+			this.node.innerHTML = "[#]";
+		} else if ( this.suit == EMPTY_SUIT ) {
+			this.node.innerHTML = "|&mdash;|";
+		} else {
+			this.node.innerHTML = this.rank.id + this.suit.char;
+		}
+
+		this.draggable = this.suit != EMPTY_SUIT;
+		this.droppable = true;
+
+		this.node.addEventListener( "mouseenter", (e) => {
+			e.target.classList.toggle( "cardHover" );
+		}, false );
+
+		this.node.addEventListener( "mouseleave", (e) => {
+			e.target.classList.toggle( "cardHover" );
+		}, false );
+
+	};
+
+	get draggable () {
+		return this.node.draggable;
+	};
+
+	set draggable ( draggable ) {
+		this.node.draggable = draggable;
+		if ( draggable ) {
+			this.node.classList.add( "draggable" );
+		} else {
+			this.node.classList.remove( "draggable" );
+		}
+	};
+
+	get droppable () {
+		return this.node.classList.contains( "droppable" );
+	};
+
+	set droppable ( droppable ) {
+		this.node.classList.add( "droppable" );
 	};
 
 	toString () {
@@ -88,6 +141,15 @@ class VGTCard extends VGTComponent {
 	static MakeJoker ( rank ) {
 		return new VGTCard( new VGTRank( rank, "Joker " + rank, 100 + rank ), JOKER_SUIT );
 	};
+
+	static MakeEmpty () {
+		return new VGTCard( new VGTRank( 0, "Empty", 101 ), EMPTY_SUIT );
+	};
+
+	static MakeBack () {
+		return new VGTCard( new VGTRank( 0, "Back", 101 ), BACK_SUIT );
+	};
+
 }
 
 export { VGTCard };

@@ -105,7 +105,11 @@ class VGTGin extends VGTGame {
 		this.players.push ( new VGTPlayer( "cm", "1" ) );
 		this.players.push ( new VGTPlayer( "dm", "2" ) );
 		this.players.push ( new VGTPlayer( "am", "3" ) );
-	}
+	};
+
+	setup () {
+		super.setup();
+	};
 
 	start () {
 		super.start();
@@ -129,8 +133,6 @@ class VGTGin extends VGTGame {
 		}
 
 		this.discards = new VGTCardGroup( "vgtgindiscards", VGTCardGroup.TYPES.FaceUp );
-
-		console.log( this.deck,this.discards  );
 
 		if ( this.gameOpts.opts.deal.value == 0 ) {
 			this.players[ this.currentPlayer ].hand.add( this.deck.deal( 1 ) );

@@ -13,6 +13,9 @@ class VGTCardGroup extends VGTComponent {
 		this.id = id;
 		this.type = type;
 
+		this.cardBack = VGTCard.MakeBack();
+		this.emptyCard = VGTCard.MakeEmpty();
+
 		this.cards = [];
 		if ( cards != null ) {
 			this.cards.push( ...cards );
@@ -30,15 +33,15 @@ class VGTCardGroup extends VGTComponent {
 
 		if ( this.type == _TYPES.FaceDown ) {
 			td = tr.insertCell();
-			td.innerHTML = "[#]";
+			td.appendChild( this.cards.length > 0 ? this.cardBack.node : this.emptyCard.node );
 		} else if ( this.type == _TYPES.FaceUp ) {
 			td = tr.insertCell();
-			td.innerHTML = "[X]";
-			console.error("F");
+			const card = this.cards[ this.cards.length - 1 ];
+			td.appendChild( card != null ? card.node : this.emptyCard.node );
 		} else if ( this.type == _TYPES.RTL ) {
 			for ( let card of this.cards ) {
 				td = tr.insertCell();
-				td.innerHTML = card.toString();
+				td.appendChild( card.node );
 			}
 		}
 
