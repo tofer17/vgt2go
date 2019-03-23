@@ -8,57 +8,56 @@ class VGTStartControls extends VGTComponent {
 		super( "div", "vgtstartcontrols" );
 
 		this.game = game;
-
-		const btn1 = document.createElement( "button" );
-		btn1.innerHTML = "Previous Player";
-		btn1.addEventListener( "click", this, false );
-		Object.defineProperty( btn1, "enabled", {
-			get () { return !btn1.disabled },
-			set ( enabled ) { btn1.disabled = !enabled; }
-		});
-		this.node.appendChild( btn1 );
-		this.previousPlayer = btn1;
-
-		const btn2 = document.createElement( "button" );
-		btn2.innerHTML = "Next Player";
-		btn2.addEventListener( "click", this, false );
-		Object.defineProperty( btn2, "enabled", {
-			get () { return !btn2.disabled },
-			set ( enabled ) { btn2.disabled = !enabled; }
-		});
-		this.node.appendChild( btn2 );
-		this.nextPlayer = btn2;
-
-		const btn3 = document.createElement( "button" );
-		btn3.innerHTML = "Start";
-		btn3.addEventListener( "click", this, false );
-		Object.defineProperty( btn3, "enabled", {
-			get () { return !btn3.disabled },
-			set ( enabled ) { btn3.disabled = !enabled; }
-		});
-		this.node.appendChild( btn3 );
-		this.startGame = btn3;
-
-		const btn4 = document.createElement( "button" );
-		btn4.innerHTML = "Cancel";
-		btn4.addEventListener( "click", this, false );
-		Object.defineProperty( btn4, "enabled", {
-			get () { return !btn4.disabled },
-			set ( enabled ) { btn4.disabled = !enabled; }
-		});
-		this.node.appendChild( btn4 );
-		this.cancelGame = btn4;
-
-		const btn5 = document.createElement( "button" );
-		btn5.innerHTML = "Delete";
-		btn5.addEventListener( "click", this, false );
-		Object.defineProperty( btn5, "enabled", {
-			get () { return !btn5.disabled },
-			set ( enabled ) { btn5.disabled = !enabled; }
-		});
-		this.node.appendChild( btn5 );
-		this.deletePlayer = btn5;
 	};
+
+	init () {
+		super.init();
+
+		this.previousPlayer = document.createElement( "button" );
+		this.previousPlayer.innerHTML = "Previous Player";
+		this.previousPlayer.addEventListener( "click", this, false );
+		Object.defineProperty( this.previousPlayer, "enabled", {
+			get () { return !this.disabled },
+			set ( enabled ) { this.disabled = !enabled; }
+		});
+		this.node.appendChild( this.previousPlayer );
+
+		this.nextPlayer = document.createElement( "button" );
+		this.nextPlayer.innerHTML = "Next Player";
+		this.nextPlayer.addEventListener( "click", this, false );
+		Object.defineProperty( this.nextPlayer, "enabled", {
+			get () { return !this.disabled },
+			set ( enabled ) { this.disabled = !enabled; }
+		});
+		this.node.appendChild( this.nextPlayer );
+
+		this.startGame = document.createElement( "button" );
+		this.startGame.innerHTML = "Start";
+		this.startGame.addEventListener( "click", this, false );
+		Object.defineProperty( this.startGame, "enabled", {
+			get () { return !this.disabled },
+			set ( enabled ) { this.disabled = !enabled; }
+		});
+		this.node.appendChild( this.startGame );
+
+		this.cancelGame = document.createElement( "button" );
+		this.cancelGame.innerHTML = "Cancel";
+		this.cancelGame.addEventListener( "click", this, false );
+		Object.defineProperty( this.cancelGame, "enabled", {
+			get () { return !this.disabled },
+			set ( enabled ) { this.disabled = !enabled; }
+		});
+		this.node.appendChild( this.cancelGame );
+
+		this.deletePlayer = document.createElement( "button" );
+		this.deletePlayer.innerHTML = "Delete";
+		this.deletePlayer.addEventListener( "click", this, false );
+		Object.defineProperty( this.deletePlayer, "enabled", {
+			get () { return !this.disabled },
+			set ( enabled ) { this.disabled = !enabled; }
+		});
+		this.node.appendChild( this.deletePlayer );
+		this.deletePlayer	};
 
 	update () {
 		const piOk = this.game.playerInfo.isValid;
