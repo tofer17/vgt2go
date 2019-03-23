@@ -9,10 +9,14 @@ const _TYPES = {FaceDown : "FD", RTL : "RTL", FaceUp : "FU" };
 class VGTCardGroup extends VGTComponent {
 	constructor ( id, type, ...cards ) {
 		super( "div", id, "vgtcardgroup" );
+
 		this.id = id;
 		this.type = type;
-		this.cards = cards != null ? cards : [];
-		//Object.defineProperty( this, "cards", { value : cards != null ? cards : [] } );
+
+		this.cards = [];
+		if ( cards != null ) {
+			this.cards.push( ...cards );
+		}
 
 		if ( this.type != null ) {
 			this.node.classList.add( this.type );
@@ -43,7 +47,11 @@ class VGTCardGroup extends VGTComponent {
 		}
 
 		return count > 1 ? ret : ret[0];
-	}
+	};
+
+	add ( ...cards ) {
+		this.cards.push( ...cards );
+	};
 
 	// Place SRC at DST.
 	//	SRC=null: remove DST
