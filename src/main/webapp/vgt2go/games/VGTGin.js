@@ -45,7 +45,7 @@ class VGTGin extends VGTGame {
 		this.gameOpts.opts.maxplayers.opts = [ 2, 5 ];
 		this.gameOpts.opts.maxplayers.value = 5;
 
-		this.init();
+		//this.init();
 
 	};
 

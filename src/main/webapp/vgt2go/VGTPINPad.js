@@ -32,6 +32,13 @@ class VGTPINPad extends VGTComponent {
 			set ( enabled ) { this.disabled = !enabled; }
 		});
 
+		//this.update();
+
+	};
+
+	init () {
+		super.init();
+
 		const t = document.createElement( "table" );
 		let tr, td, b;
 
@@ -151,17 +158,12 @@ class VGTPINPad extends VGTComponent {
 		this.node.appendChild( this.title );
 		this.node.appendChild( t );
 
-		if ( title == null || title.length < 1 ) {
+		if ( this.title == null || this.title.innerHTML.length < 1 ) {
 			this.visible = false;
 		}
 
 		this.update();
-
-	};
-
-	get node () {
-		return this.node;
-	};
+	}
 
 	setTitle ( title ) {
 		this.title.innerHTML = title;

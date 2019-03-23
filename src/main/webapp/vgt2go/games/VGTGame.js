@@ -35,11 +35,10 @@ class VGTGame extends VGTComponent {
 		this.pinPad.addEventListener( "done", this, false );
 		this.pinPad.addEventListener( "previous", this, false );
 		this.pinPad.addEventListener( "next", this, false );
+
 	};
 
 	init () {
-		this.gameOpts.init();
-
 		this.node.appendChild( document.createTextNode( this.title ) );
 		this.node.appendChild( document.createElement( "hr" ) );
 		this.node.appendChild( this.playerInfo.node );

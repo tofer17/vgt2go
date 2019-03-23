@@ -4,40 +4,47 @@
 class VGTComponent extends EventTarget {
 	constructor ( tagName, id, ...classes ) {
 		super();
-		Object.defineProperty( this, "node", { value : tagName ? document.createElement( tagName ) : null } );
+		Object.defineProperty( this, "_node", {
+			value : tagName ? document.createElement( tagName ) : null
+		});
 		Object.defineProperty( this, "listeners", { value : {} } );
 
-		if ( this.node && id ) {
-			this.node.id = id;
+		if ( this._node && id ) {
+			this._node.id = id;
 		}
 
-		if ( this.node ) {
-			this.node.classList.add( ...classes );
+		if ( this._node ) {
+			this._node.classList.add( ...classes );
 		}
+	};
+
+	init () {
+		;
 	};
 
 	get node () {
-		return this.node;
+		if ( !this.hasOwnProperty( "initialized" ) ) {
+			Object.defineProperty( this, "initialized", { value : true } );
+			this.init();
+		}
+
+		return this._node;
 	};
 
 	get visible () {
-		return this.node.style.display != "none";
+		return this._node.style.display != "none";
 	};
 
 	set visible ( vis ) {
-		this.node.style.display = vis ? "" : "none";
+		this._node.style.display = vis ? "" : "none";
 	};
 
 	update () {
-		if ( super.update ) {
-			super.update();
-		}
+		;
 	};
 
 	handleEvent ( evt ) {
-		if ( super.handleEvent ) {
-			super.handleEvent( evt );
-		}
+		;
 	};
 
 }
