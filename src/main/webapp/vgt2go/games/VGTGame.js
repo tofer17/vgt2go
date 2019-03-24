@@ -25,6 +25,8 @@ class VGTGame extends VGTComponent {
 		this.startControls = new VGTStartControls( this );
 
 		this.pinPad = new VGTPINPad();
+
+		this.dragging = null;
 	};
 
 	init () {
@@ -51,6 +53,14 @@ class VGTGame extends VGTComponent {
 		this.pinPad.addEventListener( "done", this, false );
 		this.pinPad.addEventListener( "previous", this, false );
 		this.pinPad.addEventListener( "next", this, false );
+
+		document.addEventListener ( "drag", this, false );
+		document.addEventListener( "dragstart", this, false );
+		document.addEventListener( "dragend", this, false );
+		document.addEventListener( "dragover", this, false );
+		document.addEventListener( "dragenter", this, false );
+		document.addEventListener( "dragleave", this, false );
+		document.addEventListener( "drop", this, false );
 	};
 
 	getPlayers () {
@@ -110,6 +120,8 @@ class VGTGame extends VGTComponent {
 	handleEvent ( event ) {
 		if ( event.target == this.playerInfo ) {
 			;
+		} else if ( event instanceof DragEvent ) {
+			this.handleDragEvent( event );
 		} else if ( event.type == "next" ) {
 			this.shiftCurrentPlayer( 1, event.target != this.pinPad );
 		} else if ( event.type == "previous" ) {
@@ -127,12 +139,68 @@ class VGTGame extends VGTComponent {
 			}
 		} else if ( event.type == "cancel" ) {
 			console.log( "CANCEL!" );
+		} else {
+			console.error( "HTH?!?", event );
 		}
 
 		this.startControls.update();
 		this.gameOpts.enabled = this.currentPlayer == 0;
 	};
 
+	handleDragEvent ( event ) {
+		if ( event.type == "drag" ) {
+			;
+		} else if ( event.type == "dragstart" ) {
+			this.dragging = event.target;
+			event.target.style.opacity = 0.5;
+		} else if ( event.type == "dragend" ) {
+			event.target.style.opacity = "";
+		} else if ( event.type == "dragover" ) {
+			event.preventDefault();
+		} else if ( event.type == "dragenter" ) {
+			const droppable = getDroppableParent( event.target );
+			if ( droppable != null ) {
+				droppable.style.background = "purple";
+			}
+		} else if ( event.type == "dragleave" ) {
+			const droppable = getDroppableParent( event.target );
+			if ( droppable != null ) {
+				droppable.style.background = "";
+			}
+		} else if ( event.type == "drop" ) {
+			event.preventDefault();
+
+			const droppable = getDroppableParent( event.target );
+
+			if ( droppable != null ) {
+				droppable.style.background = "";
+
+				if ( this.dragging.card.pile == droppable.card.pile ) {
+					this.dragging.card.pile.reorder( this.dragging.card, droppable.card );
+				} else {
+					this.dragging.card.pile.removeCard( this.dragging.card );
+					droppable.card.pile.addCardAt( this.dragging.card, droppable.card );
+				}
+
+			}
+		} else {
+			console.error( "HTH!?!", event );
+		}
+	};
+
+}
+
+function getDroppableParent ( target ) {
+	let dropZone = null;
+	while ( dropZone == null && target != null ) {
+		//if ( target.className == "droppable" ) {
+		if ( target.classList && target.classList.contains( "droppable" ) ) {
+			dropZone = target;
+		} else {
+			target = target.parentNode;
+		}
+	}
+	return dropZone;
 }
 
 export { VGTGame };

@@ -35,7 +35,7 @@ class VGTApp extends VGTComponent {
 	handleEvent ( event ) {
 		if ( event.type == "newgame" ) {
 			const game = event.game;
-			window.importGame(  game.importURI+"?" ).then( (game) => { this.launchGame( game ); } );
+			window.importGame(  game.importURI ).then( (game) => { this.launchGame( game ); } );
 		} else if ( event.type == "resumegame" ) {
 			console.error( "FIXME" );
 		}

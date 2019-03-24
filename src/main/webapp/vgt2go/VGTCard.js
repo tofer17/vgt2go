@@ -76,6 +76,8 @@ class VGTCard extends VGTComponent {
 		Object.defineProperty( this, "rank", { value: rank } );
 		Object.defineProperty( this, "suit", { value: suit } );
 		Object.defineProperty( this, "id", { value: rank.id + suit.id } );
+
+		this.pile = null;
 	};
 
 	init () {
@@ -99,6 +101,7 @@ class VGTCard extends VGTComponent {
 			e.target.classList.toggle( "cardHover" );
 		}, false );
 
+		this.node.card = this;
 	};
 
 	get draggable () {

@@ -14,12 +14,13 @@ class VGTCardGroup extends VGTComponent {
 		this.type = type;
 
 		this.cardBack = VGTCard.MakeBack();
+		this.cardBack.pile = this;
+
 		this.emptyCard = VGTCard.MakeEmpty();
+		this.emptyCard.pile = this;
 
 		this.cards = [];
-		if ( cards != null ) {
-			this.cards.push( ...cards );
-		}
+		this.add( cards );
 
 		if ( this.type != null ) {
 			this.node.classList.add( this.type );
@@ -27,6 +28,11 @@ class VGTCardGroup extends VGTComponent {
 	};
 
 	init () {
+		this.update();
+	};
+
+	update () {
+		this.node.innerHTML = "";
 		const tab = document.createElement( "table" );
 		const tr = tab.insertRow();
 		let td;
@@ -48,6 +54,8 @@ class VGTCardGroup extends VGTComponent {
 		this.node.append( tab );
 	};
 
+
+
 	removeJokers () {
 		this.cards = this.cards.filter( card => card.suit != VGTCard.JOKER_SUIT );
 	};
@@ -68,14 +76,50 @@ class VGTCardGroup extends VGTComponent {
 
 		const ret = [];
 		for ( let i = 0; i < count; i++ ) {
-			ret.push( this.cards.pop() );
+
+			const card = this.cards.pop();
+
+			card.pile = null;
+			ret.push( card );
 		}
 
 		return count > 1 ? ret : ret[0];
 	};
 
 	add ( ...cards ) {
-		this.cards.push( ...cards );
+		for ( let card of cards ) {
+			if ( card instanceof Array ) {
+
+				this.add( ...card );
+
+			} else {
+
+				card.pile = this;
+				this.cards.push( card );
+
+			}
+		}
+	};
+
+	removeCard ( card ) {
+		const index = isFinite( card ) ? card : this.cards.indexOf( card );
+		if ( index == -1 ) {
+			return removeCard( this.type == _TYPES.FaceDown ? 0 : this.cards.length - 1 );
+		}
+		this.cards.splice( index, 1 );
+		card.pile = null;
+		this.update();
+		return card;
+	};
+
+	addCardAt ( card, dst ) {
+		const index = isFinite( dst ) ? dst : this.cards.indexOf( dst );
+		if ( index == -1 ) {
+			return addCardAt( card, this.type == _TYPES.FaceDown ? 0 : this.cards.length - 1 );
+		}
+		this.cards.splice( index, 0, card );
+		card.pile = this;
+		this.update();
 	};
 
 	// Place SRC at DST.
