@@ -39,7 +39,8 @@ class VGTCardGroup extends VGTComponent {
 
 		if ( this.type == _TYPES.FaceDown ) {
 			td = tr.insertCell();
-			td.appendChild( this.cards.length > 0 ? this.cardBack.node : this.emptyCard.node );
+			const card = this.cards[ 0 ];
+			td.appendChild( this.cards.length > 0 ? card.node : this.emptyCard.node );
 		} else if ( this.type == _TYPES.FaceUp ) {
 			td = tr.insertCell();
 			const card = this.cards[ this.cards.length - 1 ];
@@ -54,7 +55,11 @@ class VGTCardGroup extends VGTComponent {
 		this.node.append( tab );
 	};
 
-
+	turnAllFaceUp ( faceUp ) {
+		for ( let card of this.cards ) {
+			card.faceUp = faceUp;
+		}
+	};
 
 	removeJokers () {
 		this.cards = this.cards.filter( card => card.suit != VGTCard.JOKER_SUIT );
@@ -83,6 +88,7 @@ class VGTCardGroup extends VGTComponent {
 			ret.push( card );
 		}
 
+		this.update();
 		return count > 1 ? ret : ret[0];
 	};
 
@@ -99,12 +105,13 @@ class VGTCardGroup extends VGTComponent {
 
 			}
 		}
+
 	};
 
 	removeCard ( card ) {
 		const index = isFinite( card ) ? card : this.cards.indexOf( card );
 		if ( index == -1 ) {
-			return removeCard( this.type == _TYPES.FaceDown ? 0 : this.cards.length - 1 );
+			return this.removeCard( this.type == _TYPES.FaceDown ? 0 : this.cards.length - 1 );
 		}
 		this.cards.splice( index, 1 );
 		card.pile = null;
@@ -115,7 +122,7 @@ class VGTCardGroup extends VGTComponent {
 	addCardAt ( card, dst ) {
 		const index = isFinite( dst ) ? dst : this.cards.indexOf( dst );
 		if ( index == -1 ) {
-			return addCardAt( card, this.type == _TYPES.FaceDown ? 0 : this.cards.length - 1 );
+			return this.addCardAt( card, this.type == _TYPES.FaceDown ? 0 : Math.max(0,this.cards.length - 1 ));
 		}
 		this.cards.splice( index, 0, card );
 		card.pile = this;
@@ -152,11 +159,18 @@ class VGTCardGroup extends VGTComponent {
 		const cards = [];
 		for ( let suit of VGTCard.SUITS ) {
 			for ( let rank of VGTCard.RANKS ) {
-					cards.push( new VGTCard( rank, suit ) );
+				const card = new VGTCard( rank, suit );
+				card.faceUp = false;
+				cards.push( card );
 			}
 		}
-		cards.push( VGTCard.MakeJoker( 1 ) );
-		cards.push( VGTCard.MakeJoker( 2 ) );
+
+		for ( let i = 1; i < 3; i++ ) {
+			const card = VGTCard.MakeJoker( i );
+			card.faceUp = false;
+			cards.push( card );
+		}
+
 		return new VGTCardGroup( "standard", _TYPES.FaceDown, ...cards );
 	};
 }

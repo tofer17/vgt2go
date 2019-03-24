@@ -130,12 +130,14 @@ class VGTGin extends VGTGame {
 				VGTCardGroup.TYPES.RTL,
 				...this.deck.deal( 10 )
 			);
+			player.hand.turnAllFaceUp( true );
 		}
 
 		this.discards = new VGTCardGroup( "vgtgindiscards", VGTCardGroup.TYPES.FaceUp );
 
 		if ( this.gameOpts.opts.deal.value == 0 ) {
 			this.players[ this.currentPlayer ].hand.add( this.deck.deal( 1 ) );
+			this.players[ this.currentPlayer ].hand.turnAllFaceUp( true );
 		} else {
 
 		}

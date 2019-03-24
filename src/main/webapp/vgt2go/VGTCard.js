@@ -62,33 +62,47 @@ SUITS.push( new VGTSuit( "H", "Hearts", 3 ) );
 SUITS.push( new VGTSuit( "S", "Spades", 4 ) );
 
 const JOKER_SUIT = new VGTSuit( "X", "Joker", 100 );
-const EMPTY_SUIT = new VGTSuit( ".", "Empty", 101 );
-const BACK_SUIT = new VGTSuit( ".", "Back", 101 );
+const EMPTY_SUIT = new VGTSuit( "e", "Empty", 101 );
+const BACK_SUIT = new VGTSuit( "b", "Back", 101 );
 
 class VGTCard extends VGTComponent {
 	constructor ( rank, suit ) {
-		super( "div",
-			"vgtcard-" +
-			rank.id + suit.id,
-			"vgtcard", suit.color + "suit"
-		);
+		super( "div", null, "vgtcard" );
 
 		Object.defineProperty( this, "rank", { value: rank } );
 		Object.defineProperty( this, "suit", { value: suit } );
 		Object.defineProperty( this, "id", { value: rank.id + suit.id } );
 
+		this.facingUp = true;
 		this.pile = null;
+	};
+
+	get faceUp () {
+		return this.facingUp;
+	};
+
+	set faceUp ( faceUp ) {
+		this.facingUp = faceUp;
+
+		if ( this.suit == EMPTY_SUIT ) {
+			this.node.innerHTML = "|&mdash;|";
+		} else if ( this.suit == BACK_SUIT || (!this.facingUp) ) {
+			this.node.innerHTML = "[X]";
+			this.node.classList.remove( "redsuit" );
+			this.node.classList.remove( "blacksuit" );
+			this.node.classList.add( "backsuit" );
+			this.node.id = "";
+		} else {
+			this.node.innerHTML = this.rank.id + this.suit.char;
+			this.node.classList.remove( "backsuit" );
+			this.node.classList.add( this.suit.color + "suit" );
+			this.node.id = "vgtcard-" + this.rank.id + this.suit.id
+		}
 	};
 
 	init () {
 
-		if ( this.suit == BACK_SUIT ) {
-			this.node.innerHTML = "[#]";
-		} else if ( this.suit == EMPTY_SUIT ) {
-			this.node.innerHTML = "|&mdash;|";
-		} else {
-			this.node.innerHTML = this.rank.id + this.suit.char;
-		}
+		this.faceUp = this.facingUp;
 
 		this.draggable = this.suit != EMPTY_SUIT;
 		this.droppable = true;
