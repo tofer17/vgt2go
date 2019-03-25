@@ -4,6 +4,10 @@ body {
 	font-family: sans-serif;
 }
 
+.vgtnewgame {
+	cursor: pointer;
+}
+
 .vgtcard {
 	cursor: default;
 	border: 2px solid white;

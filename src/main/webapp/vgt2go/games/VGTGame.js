@@ -43,11 +43,11 @@ class VGTGame extends VGTComponent {
 
 	init () {
 		this.node.appendChild( document.createTextNode( this.title ) );
-		this.node.appendChild( document.createElement( "hr" ) );
+		//this.node.appendChild( document.createElement( "hr" ) );
 		this.node.appendChild( this.playerInfo.node );
-		this.node.appendChild( document.createElement( "hr" ) );
+		//this.node.appendChild( document.createElement( "hr" ) );
 		this.node.appendChild( this.gameOpts.node );
-		this.node.appendChild( document.createElement( "hr" ) );
+		//this.node.appendChild( document.createElement( "hr" ) );
 		this.node.appendChild( this.startControls.node );
 
 		this.node.appendChild( this.pinPad.node );

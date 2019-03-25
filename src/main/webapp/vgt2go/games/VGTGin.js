@@ -25,28 +25,103 @@ class VGTGinTable extends VGTCardTable {
 
 		this.stockPile = stockPile;
 		this.discardPile = discardPile;
-		this.playerHand = document.createElement( "div" );
+		this.playerHand = null;
+		this.playerHandDiv = document.createElement( "div" );
 	};
 
 	init () {
 		super.init();
 
-		this.node.appendChild( document.createTextNode( "s" ) );
+		//this.node.appendChild( document.createTextNode( "s" ) );
 		this.node.appendChild( this.stockPile.node );
 
-		this.node.appendChild( document.createTextNode( "d" ) );
+		//this.node.appendChild( document.createTextNode( "d" ) );
 		this.node.appendChild( this.discardPile.node );
 
-		this.node.appendChild( document.createTextNode( "p" ) );
-		this.node.appendChild( this.playerHand );
+		//this.node.appendChild( document.createTextNode( "p" ) );
+		this.node.appendChild( this.playerHandDiv );
 
 		this.stockPile.addEventListener( "change", this, false );
 		this.discardPile.addEventListener( "change", this, false );
+
+		const btn = document.createElement( "button" );
+		btn.innerHTML = "check meld";
+		btn.addEventListener( "click", this, false );
+		this.node.appendChild( btn );
+	};
+
+	// TODO: Add wild cards
+	// ** = WILD RANK OR SUIT
+	// *_ = WILD RANK
+	// _* = WILD SUIT
+
+	// aceOpt can be:
+	//		*0: start-only => A23=ok, KQA=no, KA2=no
+	//		 1: end-only => A23=no, KQA=ok, KA2=no
+	//		 2: start-or-end-only => A23=ok, KQA=ok, K2A=no
+	//		 3: modulus => A23=ok, KQA=ok, K2A=ok
+	checkMeld ( cards, aceOpt ) {
+		if ( aceOpt == null ) {
+			aceOpt = 0;
+		}
+
+		// Check for a SET (all the same rank):
+		let chk = cards[0].rank;
+		for ( let card of cards ) {
+			chk = chk == card.rank ? card.rank : null;
+		}
+
+		if ( chk != null ) {
+			return true;
+		}
+
+		// check for RUN-- must all be same suit
+		chk = cards[0].suit;
+		for ( let card of cards ) {
+			chk = chk == card.suit ? card.suit : null;
+		}
+
+		if ( chk == null ) {
+			return false;
+		}
+
+		// Check they're in order (once sorted)
+
+		cards.sort( ( c1, c2 ) => {
+			const v1 = c1.suit.order * 4 + c1.rank.order;
+			const v2 = c2.suit.order * 4 + c2.rank.order;
+			return v1 == v2 ? 0 : v1 > v2 ? 1 : -1;
+		});
+
+		chk = cards[0].rank.order;
+
+		// TODO: need aceOpt logic :( As is => aceOpt = 0
+		for ( let card of cards ) {
+			if ( chk++ != card.rank.order ) {
+				return false;
+			}
+		}
+
+		return true;
+	};
+
+	handleEvent( event ) {
+		if ( event.type == "click" ) {
+			const cards = this.playerHand.cards;
+			const m0 = [ cards[0], cards[1], cards[2] ];
+			const m1 = [ cards[3], cards[4], cards[5] ];
+			const m2 = [ cards[6], cards[7], cards[8], cards[9] ];
+
+			this.checkMeld( m0 );
+			//checkMeld( m1 );
+			//checkMeld( m2 );
+		}
 	};
 
 	setPlayerHand ( playerHand ) {
-		this.playerHand.innerHTML = "";
-		this.playerHand.appendChild( playerHand.node );
+		this.playerHandDiv.innerHTML = "";
+		this.playerHandDiv.appendChild( playerHand.node );
+		this.playerHand = playerHand;
 	};
 }
 
@@ -114,7 +189,7 @@ class VGTGin extends VGTGame {
 	start () {
 		super.start();
 		console.log("START!");
-		this.node.appendChild( document.createTextNode( "TABLE" ) );
+		//this.node.appendChild( document.createTextNode( "TABLE" ) );
 
 		this.deck = VGTCardGroup.MakeStandardDeck();
 		this.deck.droppable = false;
