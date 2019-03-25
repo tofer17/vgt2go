@@ -117,6 +117,8 @@ class VGTGin extends VGTGame {
 		this.node.appendChild( document.createTextNode( "TABLE" ) );
 
 		this.deck = VGTCardGroup.MakeStandardDeck();
+		this.deck.droppable = false;
+
 		if ( this.gameOpts.opts.jokers.value == 0 ) {
 			this.deck.removeJokers();
 		}
@@ -136,19 +138,83 @@ class VGTGin extends VGTGame {
 		this.discards = new VGTCardGroup( "vgtgindiscards", VGTCardGroup.TYPES.FaceUp );
 
 		if ( this.gameOpts.opts.deal.value == 0 ) {
-			this.players[ this.currentPlayer ].hand.add( this.deck.deal( 1 ) );
-			this.players[ this.currentPlayer ].hand.turnAllFaceUp( true );
-		} else {
+			this.currentPlayer.hand.add( this.deck.deal( 1 ) );
+			this.currentPlayer.hand.turnAllFaceUp( true );
+			this.currentPlayer.hand.update();
+			this.currentPlayer.hand.droppable = true;
 
+			this.deck.draggable = false;
+
+			this.discards.draggable = false;
+			this.discards.droppable = true;
+		} else {
+			this.discards.add( this.deck.deal( 1 ) );
+			this.discards.turnAllFaceUp( true );
+
+			this.deck.draggable = true;
+
+			this.discards.draggable = true;
+			this.discards.droppable = false;
 		}
 
 		this.table = new VGTGinTable( this.deck, this.discards );
-		this.table.setPlayerHand( this.players[ this.currentPlayer ].hand );
+		this.table.setPlayerHand( this.currentPlayer.hand );
 
 		this.node.appendChild( this.table.node );
 
 	};
 
+	handleDragEvent ( event ) {
+		super.handleDragEvent( event );
+		/*
+		 * At Player Start: you have 10 cards, draw a card from stock or disc
+		 *  stock: +drag -drop; disc: +drag -drop; hand: +drag +drop
+		 * After Drop: you have 11 cards, discard a card from hand to disc
+		 *  stock: -drag -drop; disc: -drag +drop; hand: +drag +drop
+		 * After Drop: u just discarded, next player
+		 */
+
+		if ( event.type == "drop" ) {
+
+			if ( this.dropping == null ) { // off-drop
+				; // nop
+			} else if ( this.dragging.srcPile == this.dropping.card.pile ) { // Rearranging
+				; // nop
+			} else if ( this.currentPlayer.hand.length == 10 && this.dropping.card.pile == this.discards) {
+				//console.log( "Just discarded-- next player" );
+				this.table.visible = false;
+				this.shiftCurrentPlayer( 1, false );
+			} else if ( this.currentPlayer.hand.length == 11 && this.dropping.card.pile == this.currentPlayer.hand ) {
+				//console.log( "Just drew a card." );
+
+				this.deck.draggable = false;
+				this.deck.droppable = false;
+
+				this.discards.draggable = false;
+				this.discards.droppable = true;
+			}
+		}
+	};
+
+	shiftCurrentPlayer ( dir, allowNew ) {
+		super.shiftCurrentPlayer( dir, allowNew );
+
+		if ( this.stage == 1 && dir == 0 ) {
+
+			this.table.setPlayerHand( this.currentPlayer.hand );
+
+			this.currentPlayer.hand.draggable = true;
+			this.currentPlayer.hand.droppable = true;
+
+			this.deck.draggable = true;
+			this.deck.droppable = false;
+
+			this.discards.draggable = true;
+			this.discards.droppable = false;
+
+			this.table.visible = true;
+		}
+	};
 }
 
 function launch ( app ) {

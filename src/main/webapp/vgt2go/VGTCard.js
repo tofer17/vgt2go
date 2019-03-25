@@ -136,7 +136,11 @@ class VGTCard extends VGTComponent {
 	};
 
 	set droppable ( droppable ) {
-		this.node.classList.add( "droppable" );
+		if ( droppable ) {
+			this.node.classList.add( "droppable" );
+		} else {
+			this.node.classList.remove( "droppable" );
+		}
 	};
 
 	toString () {

@@ -16,7 +16,7 @@ class VGTGame extends VGTComponent {
 		this.title = title;
 
 		this.players = [];
-		this.currentPlayer = null;
+		this.currentPlayerIndex = -1;
 
 		this.playerInfo = new VGTPlayerInfo();
 
@@ -26,7 +26,19 @@ class VGTGame extends VGTComponent {
 
 		this.pinPad = new VGTPINPad();
 
+		this.stage = 0;
+
 		this.dragging = null;
+		this.dropping = null;
+	};
+
+	get currentPlayer () {
+		return this.players[ this.currentPlayerIndex ];
+	};
+
+	// Set by VGTPlayer or index
+	set currentPlayer ( player ) {
+		this.currentPlayerIndex = isFinite( player ) ? parseInt( player ) : this.players.indexOf( player );
 	};
 
 	init () {
@@ -68,15 +80,18 @@ class VGTGame extends VGTComponent {
 	};
 
 	setup () {
-		this.currentPlayer = -1;
+		this.currentPlayerIndex = -1;
 		this.shiftCurrentPlayer( 1, true );
 		this.startControls.update();
 	};
 
 	start () {
+		this.pinPad.setControlsVisible( false );
 		this.playerInfo.visible = false;
 		this.gameOpts.visible = false;
 		this.startControls.visible = false;
+
+		this.stage = 1;
 	};
 
 	shiftCurrentPlayer ( dir, allowNew ) {
@@ -85,34 +100,38 @@ class VGTGame extends VGTComponent {
 		this.gameOpts.visible = false;
 		this.startControls.visible = false;
 
-		this.currentPlayer += dir;
+		this.currentPlayerIndex += dir;
 
-		if ( this.currentPlayer < 0 ) {
-			this.currentPlayer = this.players.length - 1;
-		} else if ( allowNew && this.currentPlayer >= this.players.length && this.currentPlayer <= this.gameOpts.opts.maxPlayers.value ) {
+		if ( this.currentPlayerIndex < 0 ) {
+			this.currentPlayerIndex = this.players.length - 1;
+		} else if ( allowNew && this.currentPlayerIndex >= this.players.length && this.currentPlayerIndex <= this.gameOpts.opts.maxPlayers.value ) {
 			this.players.push( new VGTPlayer( "", "" ) );
-		} else if ( !allowNew && this.currentPlayer >= this.players.length ) {
-			this.currentPlayer = 0;
-		} else if ( this.currentPlayer > this.gameOpts.opts.maxPlayers.value ) {
-			this.currentPlayer = 0;
+		} else if ( !allowNew && this.currentPlayerIndex >= this.players.length ) {
+			this.currentPlayerIndex = 0;
+		} else if ( this.currentPlayerIndex > this.gameOpts.opts.maxPlayers.value ) {
+			this.currentPlayerIndex = 0;
 		}
 
-		if ( this.players[ this.currentPlayer ].pin.length > 0 && dir != 0 ) {
+		if ( this.currentPlayer.pin.length > 0 && dir != 0 ) {
 
-			this.pinPad.setControlsVisible( true );
+			this.pinPad.setControlsVisible( this.stage == 0 );
 
-			this.pinPad.validate( this.players[ this.currentPlayer ].name, this.players[ this.currentPlayer ].pin );
+			this.pinPad.validate( this.currentPlayer.name, this.currentPlayer.pin );
 		} else {
-			this.playerInfo.setPlayer( this.players[ this.currentPlayer ] );
 
-			if ( this.players[ this.currentPlayer ].name == "" ) {
-				this.playerInfo.name.placeholder = "Enter name or initials...";
+			if ( this.stage == 0 ) {
+
+				this.playerInfo.setPlayer( this.currentPlayer );
+
+				if ( this.currentPlayer.name == "" ) {
+					this.playerInfo.name.placeholder = "Enter name or initials...";
+				}
+
+				this.playerInfo.visible = true;
+				this.gameOpts.visible = true;
+				this.gameOpts.enabled = this.currentPlayerIndex == 0;
+				this.startControls.visible = true;
 			}
-
-			this.playerInfo.visible = true;
-			this.gameOpts.visible = true;
-			this.gameOpts.enabled = this.currentPlayer == 0;
-			this.startControls.visible = true;
 		}
 
 	};
@@ -129,11 +148,11 @@ class VGTGame extends VGTComponent {
 		} else if ( event.type == "done" ) {
 			this.shiftCurrentPlayer( 0 );
 		} else if ( event.type == "delete" ) {
-			this.players.splice( this.currentPlayer, 1 );
+			this.players.splice( this.currentPlayerIndex, 1 );
 			this.shiftCurrentPlayer( -1 );
 		} else if ( event.type == "start" ) {
-			if ( this.currentPlayer != 0 ) {
-				this.shiftCurrentPlayer( -this.currentPlayer );
+			if ( this.currentPlayerIndex != 0 ) {
+				this.shiftCurrentPlayer( -this.currentPlayerIndex );
 			} else {
 				this.start();
 			}
@@ -144,7 +163,7 @@ class VGTGame extends VGTComponent {
 		}
 
 		this.startControls.update();
-		this.gameOpts.enabled = this.currentPlayer == 0;
+		this.gameOpts.enabled = this.currentPlayerIndex == 0;
 	};
 
 	handleDragEvent ( event ) {
@@ -152,38 +171,36 @@ class VGTGame extends VGTComponent {
 			;
 		} else if ( event.type == "dragstart" ) {
 			this.dragging = event.target;
+			this.dragging.srcPile = this.dragging.card.pile;
 			event.target.style.opacity = 0.5;
 		} else if ( event.type == "dragend" ) {
 			event.target.style.opacity = "";
 		} else if ( event.type == "dragover" ) {
 			event.preventDefault();
 		} else if ( event.type == "dragenter" ) {
-			const droppable = getDroppableParent( event.target );
-			if ( droppable != null ) {
-				droppable.style.background = "purple";
+			this.dropping = getDroppableParent( event.target );
+			if ( this.dropping != null ) {
+				this.dropping.style.background = "purple";
 			}
 		} else if ( event.type == "dragleave" ) {
-			const droppable = getDroppableParent( event.target );
-			if ( droppable != null ) {
-				droppable.style.background = "";
+			this.dropping = getDroppableParent( event.target );
+			if ( this.dropping != null ) {
+				this.dropping.style.background = "";
 			}
 		} else if ( event.type == "drop" ) {
 			event.preventDefault();
 
-			const droppable = getDroppableParent( event.target );
+			this.dropping = getDroppableParent( event.target );
 
-			if ( droppable != null ) {
-				droppable.style.background = "";
+			if ( this.dropping != null ) {
+				this.dropping.style.background = "";
 
-				if ( this.dragging.card.pile == droppable.card.pile ) {
-					this.dragging.card.pile.reorder( this.dragging.card, droppable.card );
+				if ( this.dragging.card.pile == this.dropping.card.pile ) {
+					this.dragging.card.pile.reorder( this.dragging.card, this.dropping.card );
 				} else {
-					//    HAND(RTL) -> DISC(FU) = push
-					// XX HAND(RTL) -> STOC(FD) = ins (FD)
-					//    DISC(
 					this.dragging.card.pile.removeCard( this.dragging.card );
 					this.dragging.card.faceUp = true;
-					droppable.card.pile.addCardAt( this.dragging.card, droppable.card );
+					this.dropping.card.pile.addCardAt( this.dragging.card, this.dropping.card );
 				}
 
 			}
@@ -197,7 +214,6 @@ class VGTGame extends VGTComponent {
 function getDroppableParent ( target ) {
 	let dropZone = null;
 	while ( dropZone == null && target != null ) {
-		//if ( target.className == "droppable" ) {
 		if ( target.classList && target.classList.contains( "droppable" ) ) {
 			dropZone = target;
 		} else {

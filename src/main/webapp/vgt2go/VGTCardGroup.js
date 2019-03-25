@@ -45,7 +45,6 @@ class VGTCardGroup extends VGTComponent {
 			td = tr.insertCell();
 			const card = this.cards[ this.cards.length - 1 ];
 			td.appendChild( card != null ? card.node : this.emptyCard.node );
-		console.log(this.cards);
 		} else if ( this.type == _TYPES.RTL ) {
 			for ( let card of this.cards ) {
 				td = tr.insertCell();
@@ -54,6 +53,10 @@ class VGTCardGroup extends VGTComponent {
 		}
 
 		this.node.append( tab );
+	};
+
+	get length () {
+		return this.cards.length;
 	};
 
 	turnAllFaceUp ( faceUp ) {
@@ -162,6 +165,18 @@ class VGTCardGroup extends VGTComponent {
 		this.update();
 
 	};
+
+	set draggable ( draggable ) {
+		for ( let card of this.cards ) {
+			card.draggable = draggable;
+		}
+	};
+
+	set droppable ( droppable ) {
+		for ( let card of this.cards ) {
+			card.droppable = droppable;
+		}
+	}
 
 	static get TYPES () {
 		return _TYPES;
