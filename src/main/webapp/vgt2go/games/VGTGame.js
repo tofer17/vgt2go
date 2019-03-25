@@ -139,7 +139,7 @@ class VGTGame extends VGTComponent {
 	handleEvent ( event ) {
 		if ( event.target == this.playerInfo ) {
 			;
-		} else if ( event instanceof DragEvent ) {
+		} else if ( event instanceof DragEvent || event.dataTransfer ) {
 			this.handleDragEvent( event );
 		} else if ( event.type == "next" ) {
 			this.shiftCurrentPlayer( 1, event.target != this.pinPad );
