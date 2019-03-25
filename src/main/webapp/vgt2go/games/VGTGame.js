@@ -178,6 +178,9 @@ class VGTGame extends VGTComponent {
 				if ( this.dragging.card.pile == droppable.card.pile ) {
 					this.dragging.card.pile.reorder( this.dragging.card, droppable.card );
 				} else {
+					//    HAND(RTL) -> DISC(FU) = push
+					// XX HAND(RTL) -> STOC(FD) = ins (FD)
+					//    DISC(
 					this.dragging.card.pile.removeCard( this.dragging.card );
 					this.dragging.card.faceUp = true;
 					droppable.card.pile.addCardAt( this.dragging.card, droppable.card );

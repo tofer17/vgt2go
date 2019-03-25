@@ -45,6 +45,7 @@ class VGTCardGroup extends VGTComponent {
 			td = tr.insertCell();
 			const card = this.cards[ this.cards.length - 1 ];
 			td.appendChild( card != null ? card.node : this.emptyCard.node );
+		console.log(this.cards);
 		} else if ( this.type == _TYPES.RTL ) {
 			for ( let card of this.cards ) {
 				td = tr.insertCell();
@@ -119,11 +120,22 @@ class VGTCardGroup extends VGTComponent {
 		return card;
 	};
 
+	/*
+	 * RTL: Add the card to position specified.
+	 * FU: Top card is LAST card, ergo PUSH
+	 * FD: Top card is FIRST card, ergo SPLICE
+	 */
 	addCardAt ( card, dst ) {
-		const index = isFinite( dst ) ? dst : this.cards.indexOf( dst );
+		let index = isFinite( dst ) ? dst : this.cards.indexOf( dst );
+
 		if ( index == -1 ) {
-			return this.addCardAt( card, this.type == _TYPES.FaceDown ? 0 : Math.max(0,this.cards.length - 1 ));
+			return this.addCardAt( card, this.type == _TYPES.FaceUp ? 0 : Math.max(0,this.cards.length - 1 ));
 		}
+
+		if ( this.type == _TYPES.FaceUp ) {
+			index++;
+		}
+
 		this.cards.splice( index, 0, card );
 		card.pile = this;
 		this.update();
