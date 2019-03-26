@@ -18,7 +18,8 @@ class VGTGame extends VGTComponent {
 		this.players = [];
 		this.currentPlayerIndex = -1;
 
-		this.playerInfo = new VGTPlayerInfo();
+		//this.playerInfo = new VGTPlayerInfo();
+		this.playerInfoDiv = null;
 
 		this.gameOpts = new VGTGameOpts( this );
 
@@ -42,14 +43,18 @@ class VGTGame extends VGTComponent {
 	};
 
 	init () {
+
+		this.playerInfoDiv = document.createElement( "div" );
+
 		this.node.appendChild( document.createTextNode( this.title ) );
-		this.node.appendChild( this.playerInfo.node );
+		//this.node.appendChild( this.playerInfo.node );
+		this.node.appendChild( this.playerInfoDiv );
 		this.node.appendChild( this.gameOpts.node );
 		this.node.appendChild( this.startControls.node );
 
 		this.node.appendChild( this.pinPad.node );
 
-		this.playerInfo.addEventListener( "change", this, false );
+		//this.playerInfo.addEventListener( "change", this, false );
 
 		this.gameOpts.addEventListener( "change", this, false );
 
@@ -84,16 +89,27 @@ class VGTGame extends VGTComponent {
 
 	start () {
 		this.pinPad.setControlsVisible( false );
-		this.playerInfo.visible = false;
+		//this.playerInfo.visible = false;
+		this.currentPlayer.visible = false;
 		this.gameOpts.visible = false;
 		this.startControls.visible = false;
 
 		this.stage = 1;
 	};
 
+	addPlayer ( player ) {
+		this.players.push( player );
+		this.playerInfoDiv.appendChild( player.node );
+		player.addEventListener( "change", this, false );
+	};
+
 	shiftCurrentPlayer ( dir, allowNew ) {
 
-		this.playerInfo.visible = false;
+		//this.playerInfo.visible = false;
+		if ( this.currentPlayer != null ) {
+			this.currentPlayer.visible = false;
+		}
+
 		this.gameOpts.visible = false;
 		this.startControls.visible = false;
 
@@ -102,7 +118,7 @@ class VGTGame extends VGTComponent {
 		if ( this.currentPlayerIndex < 0 ) {
 			this.currentPlayerIndex = this.players.length - 1;
 		} else if ( allowNew && this.currentPlayerIndex >= this.players.length && this.currentPlayerIndex <= this.gameOpts.opts.maxPlayers.value ) {
-			this.players.push( new VGTPlayer( "", "" ) );
+			this.addPlayer( new VGTPlayer( "", "" ) );
 		} else if ( !allowNew && this.currentPlayerIndex >= this.players.length ) {
 			this.currentPlayerIndex = 0;
 		} else if ( this.currentPlayerIndex > this.gameOpts.opts.maxPlayers.value ) {
@@ -118,13 +134,16 @@ class VGTGame extends VGTComponent {
 
 			if ( this.stage == 0 ) {
 
-				this.playerInfo.setPlayer( this.currentPlayer );
+				//this.playerInfo.setPlayer( this.currentPlayer );
 
-				if ( this.currentPlayer.name == "" ) {
-					this.playerInfo.name.placeholder = "Enter name or initials...";
-				}
 
-				this.playerInfo.visible = true;
+				//if ( this.currentPlayer.name == "" ) {
+				//	this.playerInfo.name.placeholder = "Enter name or initials...";
+				//}
+
+				//this.playerInfo.visible = true;
+			this.pinPad.visible = false;
+				this.currentPlayer.visible = true;
 				this.gameOpts.visible = true;
 				this.gameOpts.enabled = this.currentPlayerIndex == 0;
 				this.startControls.visible = true;
@@ -134,7 +153,7 @@ class VGTGame extends VGTComponent {
 	};
 
 	handleEvent ( event ) {
-		if ( event.target == this.playerInfo ) {
+		if ( event.target == this.playerInfo ) { // FIXME: always null now
 			;
 		} else if ( event instanceof DragEvent || event.dataTransfer ) {
 			this.handleDragEvent( event );

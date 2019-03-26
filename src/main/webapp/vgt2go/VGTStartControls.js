@@ -61,7 +61,9 @@ class VGTStartControls extends VGTComponent {
 		this.deletePlayer	};
 
 	update () {
-		const piOk = this.game.playerInfo.isValid;
+		//const piOk = this.game.playerInfo.isValid;
+
+		const piOk = this.game.currentPlayer.name.length > 0 && this.game.currentPlayer.pin.length > 0;
 		this.previousPlayer.enabled = piOk && this.game.players.length > 1;
 		this.nextPlayer.enabled = piOk && this.game.currentPlayerIndex <= this.game.gameOpts.opts.maxPlayers.value;
 		this.startGame.enabled = piOk && this.game.players.length >= this.game.gameOpts.opts.minPlayers.value;

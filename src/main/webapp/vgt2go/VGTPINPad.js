@@ -32,12 +32,19 @@ class VGTPINPad extends VGTComponent {
 			set ( enabled ) { this.disabled = !enabled; }
 		});
 
-		//this.update();
+
+		this.small = null;
+		this.large = null;
 
 	};
 
 	init () {
 		super.init();
+
+		this.small = document.createElement( "div" );
+		this.small.innerHTML = "P I N";
+		this.small.style.display = "none";
+		this.small.addEventListener( "click", (e)=>{this.setSmall(false)}, false);
 
 		const t = document.createElement( "table" );
 		let tr, td, b;
@@ -155,15 +162,25 @@ class VGTPINPad extends VGTComponent {
 		this.controls = tr;
 		this.controls.style.display = "none";
 
-		this.node.appendChild( this.title );
-		this.node.appendChild( t );
+
+		this.large = document.createElement( "div" );
+		this.large.appendChild( this.title );
+		this.large.appendChild( t );
+
+		this.node.appendChild( this.small );
+		this.node.appendChild( this.large );
 
 		if ( this.title == null || this.title.innerHTML.length < 1 ) {
 			this.visible = false;
 		}
 
 		this.update();
-	}
+	};
+
+	setSmall ( small ) {
+		this.small.style.display = small ? "" : "none";
+		this.large.style.display = small ? "none" : "";
+	};
 
 	setTitle ( title ) {
 		this.title.innerHTML = title;
@@ -225,18 +242,19 @@ class VGTPINPad extends VGTComponent {
 			case "pin8" : this.entry += "8"; break;
 			case "pin9" : this.entry += "9"; break;
 			case "pinBS" : this.entry = this.entry.substring( 0, this.entry.length - 1 ); break;
-			case "pinOK" : this.visible = false; this.validPin = null; this.dispatchEvent( new Event( "done" ) );
+			//case "pinOK" : this.validPin = null; this.dispatchEvent( new Event( "done" ) );
+			case "pinOK" : this.validPin = null; this.dispatchEvent( new Event( "done" ) );
 		};
 
 		if ( e.target.id == "pinPREV" ) {
-			this.visible = false;
+			//this.visible = false;
 			this.validPin = null;
 			this.dispatchEvent( new Event( "previous" ) );
 			return;
 		}
 
 		if ( e.target.id == "pinNEXT" ) {
-			this.visible = false;
+			//this.visible = false;
 			this.validPin = null;
 			this.dispatchEvent( new Event( "next" ) );
 			return;
