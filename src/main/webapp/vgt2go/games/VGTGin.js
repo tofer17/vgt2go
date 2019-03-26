@@ -10,6 +10,18 @@ import { VGTPlayer } from "../VGTPlayer.js";
 class VGTTable extends VGTComponent {
 	constructor () {
 		super( "div", "vgttable" );
+		this.activePlayer;
+	};
+
+	init () {
+		super.init();
+		this.activePlayer = document.createElement( "div" );
+		this.activePlayer.innerHTML = "?";
+		this.node.appendChild( this.activePlayer );
+	};
+
+	update () {
+
 	};
 }
 
@@ -32,13 +44,10 @@ class VGTGinTable extends VGTCardTable {
 	init () {
 		super.init();
 
-		//this.node.appendChild( document.createTextNode( "s" ) );
 		this.node.appendChild( this.stockPile.node );
 
-		//this.node.appendChild( document.createTextNode( "d" ) );
 		this.node.appendChild( this.discardPile.node );
 
-		//this.node.appendChild( document.createTextNode( "p" ) );
 		this.node.appendChild( this.playerHandDiv );
 
 		this.stockPile.addEventListener( "change", this, false );
@@ -112,16 +121,18 @@ class VGTGinTable extends VGTCardTable {
 			const m1 = [ cards[3], cards[4], cards[5] ];
 			const m2 = [ cards[6], cards[7], cards[8], cards[9] ];
 
-			this.checkMeld( m0 );
-			//checkMeld( m1 );
-			//checkMeld( m2 );
+			if ( this.checkMeld( m0 ) && this.checkMeld( m1 ) && this.checkMeld( m2 ) ) {
+				window.setTimeout( ()=>{ window.alert( "WIN!" );}, 1 );
+			}
 		}
 	};
 
-	setPlayerHand ( playerHand ) {
+
+	setActivePlayer ( player ) {
 		this.playerHandDiv.innerHTML = "";
-		this.playerHandDiv.appendChild( playerHand.node );
-		this.playerHand = playerHand;
+		this.playerHandDiv.appendChild( player.hand.node );
+		this.playerHand = player.hand;
+		this.activePlayer.innerHTML = player.name;
 	};
 }
 
@@ -161,7 +172,7 @@ class VGTGin extends VGTGame {
 		};
 
 		this.gameOpts.opts.minPlayers.opts = [ 2, 5 ];
-		this.gameOpts.opts.minPlayers.value = 3;
+		this.gameOpts.opts.minPlayers.value = 2;
 
 		this.gameOpts.opts.maxPlayers.opts = [ 2, 5 ];
 		this.gameOpts.opts.maxPlayers.value = 5;
@@ -177,9 +188,9 @@ class VGTGin extends VGTGame {
 		this.gameOpts.opts.minPlayers.visible = false;
 		this.gameOpts.opts.maxPlayers.visible = false;
 
-		this.players.push ( new VGTPlayer( "cm", "1" ) );
-		this.players.push ( new VGTPlayer( "dm", "2" ) );
-		this.players.push ( new VGTPlayer( "am", "3" ) );
+		//this.players.push ( new VGTPlayer( "cm", "1" ) );
+		//this.players.push ( new VGTPlayer( "dm", "2" ) );
+		//this.players.push ( new VGTPlayer( "am", "3" ) );
 	};
 
 	setup () {
@@ -233,9 +244,10 @@ class VGTGin extends VGTGame {
 		}
 
 		this.table = new VGTGinTable( this.deck, this.discards );
-		this.table.setPlayerHand( this.currentPlayer.hand );
-
 		this.node.appendChild( this.table.node );
+
+		this.table.setActivePlayer( this.currentPlayer );
+
 
 	};
 
@@ -276,7 +288,7 @@ class VGTGin extends VGTGame {
 
 		if ( this.stage == 1 && dir == 0 ) {
 
-			this.table.setPlayerHand( this.currentPlayer.hand );
+			this.table.setActivePlayer( this.currentPlayer );
 
 			this.currentPlayer.hand.draggable = true;
 			this.currentPlayer.hand.droppable = true;

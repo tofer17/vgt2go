@@ -27,21 +27,21 @@ class VGTGameOpts extends VGTComponent {
 			opts : [ 0, null ]
 		};
 
-		this.opts.selTest = {
-			id : "sletest",
-			text : "SelTest",
-			type : "select",
-			value : 1,
-			opts : [ "one", "two", "three", "four" ]
-		};
-
-		this.opts.radTest = {
-			id : "radtest",
-			text : "RadTest",
-			type : "radio",
-			value : 1,
-			opts : [ "a", "b", "c", "d" ]
-		};
+//		this.opts.selTest = {
+//			id : "sletest",
+//			text : "SelTest",
+//			type : "select",
+//			value : 1,
+//			opts : [ "one", "two", "three", "four" ]
+//		};
+//
+//		this.opts.radTest = {
+//			id : "radtest",
+//			text : "RadTest",
+//			type : "radio",
+//			value : 1,
+//			opts : [ "a", "b", "c", "d" ]
+//		};
 
 		this.opts.seating = {
 			id : "seating",
@@ -117,7 +117,9 @@ class VGTGameOpts extends VGTComponent {
 			});
 
 		} else if ( opt.type == "player-select" ) {
-			node.appendChild( document.createTextNode( this.game.getPlayers() ) );
+			for ( let player of this.game.getPlayers() ) {
+				node.appendChild( document.createTextNode( player.name ) );
+			}
 			Object.defineProperty( opt, "enabled", {
 				get () { return true; },
 				set ( enabled ) { ; }
@@ -159,6 +161,15 @@ class VGTGameOpts extends VGTComponent {
 	};
 
 	update () {
+		const seatingNode = this.opts.seating.node;
+		let n = seatingNode.firstChild;
+		while ( n.nextSibling ) {
+			seatingNode.removeChild( n.nextSibling );
+		}
+
+		for ( let player of this.game.getPlayers() ) {
+			this.opts.seating.node.appendChild( document.createTextNode( player.name ) );
+		}
 
 	};
 
@@ -167,6 +178,7 @@ class VGTGameOpts extends VGTComponent {
 		const evt = new Event( "change" );
 		evt.gameOpt = event.target.gameOpt
 		this.dispatchEvent( evt );
+		this.update();
 	};
 }
 

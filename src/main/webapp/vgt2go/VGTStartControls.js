@@ -32,6 +32,7 @@ class VGTStartControls extends VGTComponent {
 		this.node.appendChild( this.nextPlayer );
 
 		this.startGame = document.createElement( "button" );
+		this.startGame.id = "startGame";
 		this.startGame.innerHTML = "Start";
 		this.startGame.addEventListener( "click", this, false );
 		Object.defineProperty( this.startGame, "enabled", {
