@@ -1,21 +1,27 @@
 /**
  *
  */
+import { Utils } from "./Utils.js";
+
 class VGTComponent extends EventTarget {
 	constructor ( tagName, id, ...classes ) {
 		super();
+
+		Object.defineProperty( this, "_hashCode", { value : Utils.hashCode() } );
+
 		Object.defineProperty( this, "_node", {
-			value : tagName ? document.createElement( tagName ) : null
+			value : tagName != null ? document.createElement( tagName ) : null
 		});
-		Object.defineProperty( this, "listeners", { value : {} } );
 
-		if ( this._node && id ) {
-			this._node.id = id;
+		if ( this._node != null ) {
+			if ( id ) {
+				this._node.id = id;
+			}
+			if ( classes ) {
+				this._node.classList.add( ...classes );
+			}
 		}
 
-		if ( this._node ) {
-			this._node.classList.add( ...classes );
-		}
 	};
 
 	init () {
@@ -45,6 +51,14 @@ class VGTComponent extends EventTarget {
 
 	handleEvent ( evt ) {
 		;
+	};
+
+	appendChild ( child ) {
+		if ( child instanceof VGTComponent ) {
+			this._node.appendChild( child.node );
+		} else {
+			this._node.appendChild( child );
+		}
 	};
 
 }

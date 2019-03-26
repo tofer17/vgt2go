@@ -9,33 +9,41 @@ import { VGTGameSelector } from "./VGTGameSelector.js";
 class VGTApp extends VGTComponent {
 	constructor () {
 		super( "div", "vgtapp" );
-		document.body.appendChild( this.node );
 
 		this.newGames = [];
 		this.game = null;
 
+		this.gameSelector = null;
+		this.gameDiv = null;
+
+		document.body.appendChild( this.node );
+	};
+
+	init () {
+		super.init();
+
 		this.gameSelector = new VGTGameSelector( this );
 		this.gameSelector.addEventListener( "newgame", this, false );
 		this.gameSelector.addEventListener( "resumegame", this, false );
-		this.node.appendChild( this.gameSelector.node );
 
-		this.gameDiv = document.createElement( "div" );
-		this.node.appendChild( this.gameDiv );
+		this.gameDiv = new VGTComponent( "div", "vgtgamediv" );
 
+		this.appendChild( this.gameSelector );
+		this.appendChild( this.gameDiv );
 	};
 
 	launchGame ( game ) {
 		this.gameSelector.visible = false;
 		this.game = game.launch( this );
-		this.gameDiv.innerHTML = "";
-		this.gameDiv.appendChild( this.game.node );
+		this.gameDiv.node.innerHTML = "";
+		this.gameDiv.appendChild( this.game );
 		this.game.setup();
 	};
 
 	handleEvent ( event ) {
 		if ( event.type == "newgame" ) {
 			const game = event.game;
-			window.importGame(  game.importURI ).then( (game) => { this.launchGame( game ); } );
+			window.importGame(  game.importURI ).then( ( game ) => { this.launchGame( game ); } );
 		} else if ( event.type == "resumegame" ) {
 			console.error( "FIXME" );
 		}

@@ -18,21 +18,20 @@ class VGTRank extends VGTCardBase {
 	};
 }
 
-
-const RANKS = [];
-RANKS.push( new VGTRank( "A", "Ace", 1 ) );
-RANKS.push( new VGTRank( "2", "Two", 2 ) );
-RANKS.push( new VGTRank( "3", "Three", 3 ) );
-RANKS.push( new VGTRank( "4", "Four", 4 ) );
-RANKS.push( new VGTRank( "5", "Five", 5 ) );
-RANKS.push( new VGTRank( "6", "Six", 6 ) );
-RANKS.push( new VGTRank( "7", "Seven", 7 ) );
-RANKS.push( new VGTRank( "8", "Eight", 8 ) );
-RANKS.push( new VGTRank( "9", "Nine", 9 ) );
-RANKS.push( new VGTRank( "T", "Ten", 10 ) );
-RANKS.push( new VGTRank( "J", "Jack", 11 ) );
-RANKS.push( new VGTRank( "Q", "Queen", 12 ) );
-RANKS.push( new VGTRank( "K", "King", 13 ) );
+const STANDARD_RANKS = [];
+STANDARD_RANKS.push( new VGTRank( "A", "Ace", 1 ) );
+STANDARD_RANKS.push( new VGTRank( "2", "Two", 2 ) );
+STANDARD_RANKS.push( new VGTRank( "3", "Three", 3 ) );
+STANDARD_RANKS.push( new VGTRank( "4", "Four", 4 ) );
+STANDARD_RANKS.push( new VGTRank( "5", "Five", 5 ) );
+STANDARD_RANKS.push( new VGTRank( "6", "Six", 6 ) );
+STANDARD_RANKS.push( new VGTRank( "7", "Seven", 7 ) );
+STANDARD_RANKS.push( new VGTRank( "8", "Eight", 8 ) );
+STANDARD_RANKS.push( new VGTRank( "9", "Nine", 9 ) );
+STANDARD_RANKS.push( new VGTRank( "T", "Ten", 10 ) );
+STANDARD_RANKS.push( new VGTRank( "J", "Jack", 11 ) );
+STANDARD_RANKS.push( new VGTRank( "Q", "Queen", 12 ) );
+STANDARD_RANKS.push( new VGTRank( "K", "King", 13 ) );
 
 class VGTSuit extends VGTCardBase {
 	constructor ( id, name, order ) {
@@ -55,11 +54,11 @@ class VGTSuit extends VGTCardBase {
 	};
 }
 
-const SUITS = [];
-SUITS.push( new VGTSuit( "C", "Clubs", 1 ) );
-SUITS.push( new VGTSuit( "D", "Diamonds", 2 ) );
-SUITS.push( new VGTSuit( "H", "Hearts", 3 ) );
-SUITS.push( new VGTSuit( "S", "Spades", 4 ) );
+const STANDARD_SUITS = [];
+STANDARD_SUITS.push( new VGTSuit( "C", "Clubs", 1 ) );
+STANDARD_SUITS.push( new VGTSuit( "D", "Diamonds", 2 ) );
+STANDARD_SUITS.push( new VGTSuit( "H", "Hearts", 3 ) );
+STANDARD_SUITS.push( new VGTSuit( "S", "Spades", 4 ) );
 
 const JOKER_SUIT = new VGTSuit( "X", "Joker", 100 );
 const EMPTY_SUIT = new VGTSuit( "e", "Empty", 101 );
@@ -148,11 +147,11 @@ class VGTCard extends VGTComponent {
 	};
 
 	static get SUITS () {
-		return SUITS;
+		return STANDARD_SUITS;
 	};
 
 	static get RANKS () {
-		return RANKS;
+		return STANDARD_RANKS;
 	};
 
 	static get JOKER_SUIT () {
