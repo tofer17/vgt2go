@@ -2,34 +2,12 @@
  *
  */
 
+import { VGTCardGroup } from "../VGTCardGroup.js";
+import { VGTCardTable } from "../VGTCardTable.js";
 import { VGTComponent } from "../VGTComponent.js";
 import { VGTGame } from "./VGTGame.js";
-import { VGTCardGroup } from "../VGTCardGroup.js";
 import { VGTPlayer } from "../VGTPlayer.js";
 
-class VGTTable extends VGTComponent {
-	constructor () {
-		super( "div", "vgttable" );
-		this.activePlayer;
-	};
-
-	init () {
-		super.init();
-		this.activePlayer = document.createElement( "div" );
-		this.activePlayer.innerHTML = "?";
-		this.node.appendChild( this.activePlayer );
-	};
-
-	update () {
-		super.update();
-	};
-}
-
-class VGTCardTable extends VGTTable {
-	constructor () {
-		super();
-	};
-}
 
 class VGTGinTable extends VGTCardTable {
 	constructor ( stockPile, discardPile ) {
@@ -209,9 +187,9 @@ class VGTGin extends VGTGame {
 		const m1 = [ cards[3], cards[4], cards[5] ];
 		const m2 = [ cards[6], cards[7], cards[8], cards[9] ];
 
-		const im0 = checkMeld( m0, this.gameOpts.ace.value );
-		const im1 = checkMeld( m1, this.gameOpts.ace.value );
-		const im2 = checkMeld( m2, this.gameOpts.ace.value );
+		const im0 = checkMeld( m0, this.gameOpts.opts.ace.value );
+		const im1 = checkMeld( m1, this.gameOpts.opts.ace.value );
+		const im2 = checkMeld( m2, this.gameOpts.opts.ace.value );
 
 		console.log(   "m0:[" + m0 + "]=>" + im0 +
 					 ", m1:[" + m1 + "]=>" + im1 +
