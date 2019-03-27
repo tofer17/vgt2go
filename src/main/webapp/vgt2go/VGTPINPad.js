@@ -43,6 +43,7 @@ class VGTPINPad extends VGTComponent {
 
 		this.small = document.createElement( "div" );
 		this.small.innerHTML = "P I N";
+		this.small.style.cursor = "default";
 		this.small.style.display = "none";
 		this.small.addEventListener( "click", (e)=>{this.setSmall(false)}, false);
 

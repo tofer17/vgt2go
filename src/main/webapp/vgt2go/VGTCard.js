@@ -146,11 +146,11 @@ class VGTCard extends VGTComponent {
 		return this.id;
 	};
 
-	static get SUITS () {
+	static get STANDARD_SUITS () {
 		return STANDARD_SUITS;
 	};
 
-	static get RANKS () {
+	static get STANDARD_RANKS () {
 		return STANDARD_RANKS;
 	};
 

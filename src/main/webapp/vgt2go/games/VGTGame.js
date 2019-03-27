@@ -4,7 +4,6 @@
 import { VGTComponent } from "../VGTComponent.js";
 import { VGTGameOpts } from "../VGTGameOpts.js";
 import { VGTPlayer } from "../VGTPlayer.js";
-import { VGTPlayerInfo } from "../VGTPlayerInfo.js";
 import { VGTStartControls } from "../VGTStartControls.js";
 import { VGTPINPad } from "../VGTPINPad.js";
 
@@ -18,7 +17,6 @@ class VGTGame extends VGTComponent {
 		this.players = [];
 		this.currentPlayerIndex = -1;
 
-		//this.playerInfo = new VGTPlayerInfo();
 		this.playerInfoDiv = null;
 
 		this.gameOpts = new VGTGameOpts( this );
@@ -47,14 +45,11 @@ class VGTGame extends VGTComponent {
 		this.playerInfoDiv = document.createElement( "div" );
 
 		this.node.appendChild( document.createTextNode( this.title ) );
-		//this.node.appendChild( this.playerInfo.node );
 		this.node.appendChild( this.playerInfoDiv );
 		this.node.appendChild( this.gameOpts.node );
 		this.node.appendChild( this.startControls.node );
 
 		this.node.appendChild( this.pinPad.node );
-
-		//this.playerInfo.addEventListener( "change", this, false );
 
 		this.gameOpts.addEventListener( "change", this, false );
 
@@ -101,15 +96,17 @@ class VGTGame extends VGTComponent {
 		this.players.push( player );
 		this.playerInfoDiv.appendChild( player.node );
 		player.addEventListener( "change", this, false );
+
+		this.dispatchEvent( new Event( "player" ) );
 	};
 
 	shiftCurrentPlayer ( dir, allowNew ) {
 
-		//this.playerInfo.visible = false;
 		if ( this.currentPlayer != null ) {
 			this.currentPlayer.visible = false;
 		}
 
+		this.pinPad.visible = false;
 		this.gameOpts.visible = false;
 		this.startControls.visible = false;
 
@@ -134,15 +131,6 @@ class VGTGame extends VGTComponent {
 
 			if ( this.stage == 0 ) {
 
-				//this.playerInfo.setPlayer( this.currentPlayer );
-
-
-				//if ( this.currentPlayer.name == "" ) {
-				//	this.playerInfo.name.placeholder = "Enter name or initials...";
-				//}
-
-				//this.playerInfo.visible = true;
-			this.pinPad.visible = false;
 				this.currentPlayer.visible = true;
 				this.gameOpts.visible = true;
 				this.gameOpts.enabled = this.currentPlayerIndex == 0;
@@ -153,9 +141,7 @@ class VGTGame extends VGTComponent {
 	};
 
 	handleEvent ( event ) {
-		if ( event.target == this.playerInfo ) { // FIXME: always null now
-			;
-		} else if ( event instanceof DragEvent || event.dataTransfer ) {
+		if ( event instanceof DragEvent || event.dataTransfer ) {
 			this.handleDragEvent( event );
 		} else if ( event.type == "next" ) {
 			this.shiftCurrentPlayer( 1, event.target != this.pinPad );
@@ -174,6 +160,8 @@ class VGTGame extends VGTComponent {
 			}
 		} else if ( event.type == "cancel" ) {
 			console.log( "CANCEL!" );
+		} else if ( event.target instanceof VGTPlayer ) {
+			this.dispatchEvent( new Event( "player" ) );
 		} else {
 			console.error( "HTH?!?", event );
 		}

@@ -118,7 +118,7 @@ class VGTGameOpts extends VGTComponent {
 
 		} else if ( opt.type == "player-select" ) {
 			for ( let player of this.game.getPlayers() ) {
-				node.appendChild( document.createTextNode( player.name ) );
+				node.appendChild( document.createTextNode( player.name + " " ) );
 			}
 			Object.defineProperty( opt, "enabled", {
 				get () { return true; },
@@ -155,29 +155,59 @@ class VGTGameOpts extends VGTComponent {
 	};
 
 	init () {
+		super.init();
+
 		for ( let optKey in this.opts ) {
-			this.node.appendChild( this.makeOpt( this.opts[optKey] ) );
+			this.appendChild( this.makeOpt( this.opts[optKey] ) );
 		}
+
+		this.game.addEventListener( "player", this, false );
 	};
 
 	update () {
-		const seatingNode = this.opts.seating.node;
-		let n = seatingNode.firstChild;
-		while ( n.nextSibling ) {
-			seatingNode.removeChild( n.nextSibling );
-		}
+		super.update();
 
-		for ( let player of this.game.getPlayers() ) {
-			this.opts.seating.node.appendChild( document.createTextNode( player.name ) );
-		}
+		for ( let optKey in this.opts ) {
+			const gameOpt = this.opts[optKey];
+
+			if ( gameOpt.type == "player-select" ) {
+
+				const seatingNode = gameOpt.node;
+
+				let n = seatingNode.firstChild;
+				while ( n.nextSibling ) {
+					seatingNode.removeChild( n.nextSibling );
+				}
+
+				for ( let player of this.game.getPlayers() ) {
+					seatingNode.appendChild( document.createTextNode( player.name + " " ) );
+				}
+
+			}
+		};
+
+//		const seatingNode = this.opts.seating.node;
+//
+//		let n = seatingNode.firstChild;
+//		while ( n.nextSibling ) {
+//			seatingNode.removeChild( n.nextSibling );
+//		}
+//
+//		for ( let player of this.game.getPlayers() ) {
+//			this.opts.seating.node.appendChild( document.createTextNode( player.name + " " ) );
+//		}
 
 	};
 
 	handleEvent ( event ) {
-		event.target.gameOpt.value = event.target.value;
-		const evt = new Event( "change" );
-		evt.gameOpt = event.target.gameOpt
-		this.dispatchEvent( evt );
+
+		if ( event.target != this.game ) {
+			event.target.gameOpt.value = event.target.value;
+			const evt = new Event( "change" );
+			evt.gameOpt = event.target.gameOpt;
+			this.dispatchEvent( evt );
+		}
+
 		this.update();
 	};
 }

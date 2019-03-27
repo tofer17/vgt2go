@@ -17,11 +17,22 @@ class VGTGameSelector extends VGTComponent {
 	constructor () {
 		super( "div", "vgtgameselector" );
 
-		this.node.appendChild( document.createTextNode( "Available Games" ) );
-
-		const ul = document.createElement( "ul" );
-		this.node.appendChild( ul );
 		this.selectedGame = null;
+	};
+
+	init () {
+		super.init();
+
+		// TODO: stub... init() should query local storage
+		const newGames = window.importGame( "./vgt2go/games/Available.js" );
+		const oldGames = newGames;
+		Promise.all( [ newGames, oldGames ] ).then( this.postInit.bind(this) );
+	};
+
+	postInit ( x ) {
+		//console.log(x);
+		// x = [Module,Module] ...hmmm
+		const ul = document.createElement( "ul" );
 
 		for ( let game of AVAILABLE_GAMES ) {
 			const li = document.createElement( "li" );
@@ -33,6 +44,9 @@ class VGTGameSelector extends VGTComponent {
 
 			ul.appendChild( li );
 		}
+
+		this.appendChild( document.createTextNode( "Available Games" ) );
+		this.appendChild( ul );
 	};
 
 	handleEvent ( event ) {

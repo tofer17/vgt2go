@@ -22,16 +22,21 @@ class VGTCardGroup extends VGTComponent {
 		this.cards = [];
 		this.add( cards );
 
-		if ( this.type != null ) {
-			this.node.classList.add( this.type );
-		}
 	};
 
 	init () {
+		if ( this.type != null ) {
+			this.node.classList.add( this.type );
+		}
+
 		this.update();
 	};
 
 	update () {
+		if ( !this.initialized ) {
+			return;
+		}
+
 		this.node.innerHTML = "";
 		const tab = document.createElement( "table" );
 		const tr = tab.insertRow();
@@ -52,7 +57,7 @@ class VGTCardGroup extends VGTComponent {
 			}
 		}
 
-		this.node.append( tab );
+		this.appendChild( tab );
 	};
 
 	get length () {
@@ -63,19 +68,27 @@ class VGTCardGroup extends VGTComponent {
 		for ( let card of this.cards ) {
 			card.faceUp = faceUp;
 		}
+
+		this.update();
 	};
 
 	removeJokers () {
 		this.cards = this.cards.filter( card => card.suit != VGTCard.JOKER_SUIT );
+
+		this.update();
 	};
 
 	shuffle () {
 		// Adapted from:
 		// https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
-	    for ( let i = this.cards.length - 1; i > 0; i-- ) {
-	        const j = Math.floor( Math.random() * ( i + 1 ) );
-	        [ this.cards[ i ], this.cards[ j ] ] = [ this.cards[ j ], this.cards[ i ] ];
-	    }
+		for ( let i = this.cards.length - 1; i > 0; i-- ) {
+			//const j = Math.floor( Math.random() * ( i + 1 ) );
+			const r = window.crypto.getRandomValues( new Uint32Array(1) )[ 0 ];
+			const j = Math.floor( ( r / 4294967295.0 ) * ( i + 1 ) );
+			[ this.cards[ i ], this.cards[ j ] ] = [ this.cards[ j ], this.cards[ i ] ];
+		}
+
+		this.update();
 	};
 
 	deal ( count ) {
@@ -110,15 +123,19 @@ class VGTCardGroup extends VGTComponent {
 			}
 		}
 
+		this.update();
 	};
 
 	removeCard ( card ) {
 		const index = isFinite( card ) ? card : this.cards.indexOf( card );
+
 		if ( index == -1 ) {
 			return this.removeCard( this.type == _TYPES.FaceDown ? 0 : this.cards.length - 1 );
 		}
+
 		this.cards.splice( index, 1 );
 		card.pile = null;
+
 		this.update();
 		return card;
 	};
@@ -141,6 +158,7 @@ class VGTCardGroup extends VGTComponent {
 
 		this.cards.splice( index, 0, card );
 		card.pile = this;
+
 		this.update();
 	};
 
@@ -163,7 +181,6 @@ class VGTCardGroup extends VGTComponent {
 		}
 
 		this.update();
-
 	};
 
 	set draggable ( draggable ) {
@@ -184,8 +201,8 @@ class VGTCardGroup extends VGTComponent {
 
 	static MakeStandardDeck () {
 		const cards = [];
-		for ( let suit of VGTCard.SUITS ) {
-			for ( let rank of VGTCard.RANKS ) {
+		for ( let suit of VGTCard.STANDARD_SUITS ) {
+			for ( let rank of VGTCard.STANDARD_RANKS ) {
 				const card = new VGTCard( rank, suit );
 				card.faceUp = false;
 				cards.push( card );

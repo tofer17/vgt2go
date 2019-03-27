@@ -3,7 +3,7 @@
  */
 import { VGTComponent } from "./VGTComponent.js";
 
-class VGTPlayerInfo extends VGTComponent {
+class XVGTPlayerInfo extends VGTComponent {
 	constructor () {
 		super( "div", "vgtplayerinfo" );
 
@@ -74,4 +74,4 @@ class VGTPlayerInfo extends VGTComponent {
 
 }
 
-export { VGTPlayerInfo };
+export { XVGTPlayerInfo };

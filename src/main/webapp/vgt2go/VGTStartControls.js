@@ -8,62 +8,76 @@ class VGTStartControls extends VGTComponent {
 		super( "div", "vgtstartcontrols" );
 
 		this.game = game;
+
+		this.previousPlayer = null;
+		this.nextPlayer = null;
+		this.startGame = null;
+		this.cancelGame = null;
+		this.deletePlayer = null;
 	};
 
 	init () {
 		super.init();
 
 		this.previousPlayer = document.createElement( "button" );
+		this.previousPlayer.id = "previousPlayer";
 		this.previousPlayer.innerHTML = "Previous Player";
-		this.previousPlayer.addEventListener( "click", this, false );
 		Object.defineProperty( this.previousPlayer, "enabled", {
 			get () { return !this.disabled },
 			set ( enabled ) { this.disabled = !enabled; }
 		});
-		this.node.appendChild( this.previousPlayer );
 
 		this.nextPlayer = document.createElement( "button" );
+		this.nextPlayer.id = "nextPlayer";
 		this.nextPlayer.innerHTML = "Next Player";
-		this.nextPlayer.addEventListener( "click", this, false );
 		Object.defineProperty( this.nextPlayer, "enabled", {
 			get () { return !this.disabled },
 			set ( enabled ) { this.disabled = !enabled; }
 		});
-		this.node.appendChild( this.nextPlayer );
 
 		this.startGame = document.createElement( "button" );
 		this.startGame.id = "startGame";
 		this.startGame.innerHTML = "Start";
-		this.startGame.addEventListener( "click", this, false );
 		Object.defineProperty( this.startGame, "enabled", {
 			get () { return !this.disabled },
 			set ( enabled ) { this.disabled = !enabled; }
 		});
-		this.node.appendChild( this.startGame );
 
 		this.cancelGame = document.createElement( "button" );
+		this.cancelGame.id = "cancelGame";
 		this.cancelGame.innerHTML = "Cancel";
-		this.cancelGame.addEventListener( "click", this, false );
 		Object.defineProperty( this.cancelGame, "enabled", {
 			get () { return !this.disabled },
 			set ( enabled ) { this.disabled = !enabled; }
 		});
-		this.node.appendChild( this.cancelGame );
 
 		this.deletePlayer = document.createElement( "button" );
+		this.deletePlayer.id = "deletePlayer";
 		this.deletePlayer.innerHTML = "Delete";
-		this.deletePlayer.addEventListener( "click", this, false );
 		Object.defineProperty( this.deletePlayer, "enabled", {
 			get () { return !this.disabled },
 			set ( enabled ) { this.disabled = !enabled; }
 		});
-		this.node.appendChild( this.deletePlayer );
-		this.deletePlayer	};
+
+
+		this.appendChild( this.previousPlayer );
+		this.appendChild( this.nextPlayer );
+		this.appendChild( this.startGame );
+		this.appendChild( this.cancelGame );
+		this.appendChild( this.deletePlayer );
+
+		this.previousPlayer.addEventListener( "click", this, false );
+		this.nextPlayer.addEventListener( "click", this, false );
+		this.startGame.addEventListener( "click", this, false );
+		this.cancelGame.addEventListener( "click", this, false );
+		this.deletePlayer.addEventListener( "click", this, false );
+
+	};
 
 	update () {
-		//const piOk = this.game.playerInfo.isValid;
 
 		const piOk = this.game.currentPlayer.name.length > 0 && this.game.currentPlayer.pin.length > 0;
+
 		this.previousPlayer.enabled = piOk && this.game.players.length > 1;
 		this.nextPlayer.enabled = piOk && this.game.currentPlayerIndex <= this.game.gameOpts.opts.maxPlayers.value;
 		this.startGame.enabled = piOk && this.game.players.length >= this.game.gameOpts.opts.minPlayers.value;
