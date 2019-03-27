@@ -116,9 +116,9 @@ class VGTGin extends VGTGame {
 
 		this.ginButton.addEventListener( "click", this, false );
 
-		//this.players.push ( new VGTPlayer( "cm", "1" ) );
-		//this.players.push ( new VGTPlayer( "dm", "2" ) );
-		//this.players.push ( new VGTPlayer( "am", "3" ) );
+		this.addPlayer( new VGTPlayer( "cm", "1" ) );
+		this.addPlayer( new VGTPlayer( "dm", "2" ) );
+		this.addPlayer( new VGTPlayer( "am", "3" ) );
 	};
 
 	setup () {

@@ -95,6 +95,7 @@ class VGTGame extends VGTComponent {
 	addPlayer ( player ) {
 		this.players.push( player );
 		this.playerInfoDiv.appendChild( player.node );
+		player.visible = this.players.length - 1 == this.currentPlayerIndex;
 		player.addEventListener( "change", this, false );
 
 		this.dispatchEvent( new Event( "player" ) );
@@ -104,6 +105,7 @@ class VGTGame extends VGTComponent {
 
 		if ( this.currentPlayer != null ) {
 			this.currentPlayer.visible = false;
+			this.currentPlayer.pinPad.setSmall( true );
 		}
 
 		this.pinPad.visible = false;

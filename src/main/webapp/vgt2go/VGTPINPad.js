@@ -163,7 +163,6 @@ class VGTPINPad extends VGTComponent {
 		this.controls = tr;
 		this.controls.style.display = "none";
 
-
 		this.large = document.createElement( "div" );
 		this.large.appendChild( this.title );
 		this.large.appendChild( t );

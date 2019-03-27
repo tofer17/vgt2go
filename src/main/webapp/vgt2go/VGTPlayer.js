@@ -31,10 +31,13 @@ class VGTPlayer extends VGTComponent {
 		this.nameInput = document.createElement( "input" );
 		this.nameInput.minlength = 1;
 		this.nameInput.placeHolder = "Enter name or initials...";
+		this.nameInput.value = this.name;
 
 		this.pinPad = new VGTPINPad();
+		this.pinPad.entry = this.pin;
 
 		this.avatarMaker = new VGTAvatarMaker( this );
+		this.avatarMaker.img = this.avatar;
 
 		const nameLbl = document.createElement( "label" );
 		nameLbl.htmlFor = this.node.id;
