@@ -186,12 +186,12 @@ class VGTGame extends VGTComponent {
 		} else if ( event.type == "dragenter" ) {
 			this.dropping = getDroppableParent( event.target );
 			if ( this.dropping != null ) {
-				this.dropping.style.background = "purple";
+				//this.dropping.style.background = "purple";
 			}
 		} else if ( event.type == "dragleave" ) {
 			this.dropping = getDroppableParent( event.target );
 			if ( this.dropping != null ) {
-				this.dropping.style.background = "";
+				//this.dropping.style.background = "";
 			}
 		} else if ( event.type == "drop" ) {
 			event.preventDefault();
@@ -199,7 +199,7 @@ class VGTGame extends VGTComponent {
 			this.dropping = getDroppableParent( event.target );
 
 			if ( this.dropping != null ) {
-				this.dropping.style.background = "";
+				//this.dropping.style.background = "";
 
 				if ( this.dragging.card.pile == this.dropping.card.pile ) {
 					this.dragging.card.pile.reorder( this.dragging.card, this.dropping.card );

@@ -84,18 +84,19 @@ class VGTCard extends VGTComponent {
 		this.facingUp = faceUp;
 
 		if ( this.suit == EMPTY_SUIT ) {
-			this.node.innerHTML = "|&mdash;|";
+			this.node.style.background = "#bbb";
 		} else if ( this.suit == BACK_SUIT || (!this.facingUp) ) {
-			this.node.innerHTML = "[X]";
 			this.node.classList.remove( "redsuit" );
 			this.node.classList.remove( "blacksuit" );
 			this.node.classList.add( "backsuit" );
 			this.node.id = "";
+			this.node.style.backgroundPosition = ( ( 2 ) * -100) + "px " + ( ( 4 ) * -146) + "px";
 		} else {
-			this.node.innerHTML = this.rank.id + this.suit.char;
+			this.node.innerHTML = "";
 			this.node.classList.remove( "backsuit" );
 			this.node.classList.add( this.suit.color + "suit" );
 			this.node.id = "vgtcard-" + this.rank.id + this.suit.id
+			this.node.style.backgroundPosition = ( ( this.rank.order - 1 ) * -100) + "px " + ( ( this.suit.order - 1 ) * -146) + "px";
 		}
 	};
 
@@ -113,6 +114,7 @@ class VGTCard extends VGTComponent {
 		this.node.addEventListener( "mouseleave", (e) => {
 			e.target.classList.toggle( "cardHover" );
 		}, false );
+
 
 		this.node.card = this;
 	};

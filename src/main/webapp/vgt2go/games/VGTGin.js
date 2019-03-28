@@ -24,9 +24,15 @@ class VGTGinTable extends VGTCardTable {
 
 		this.playerHandDiv = document.createElement( "div" );
 
-		this.appendChild( this.stockPile );
+		const tab = document.createElement( "table" );
+		const tr = tab.insertRow();
+		tr.insertCell().appendChild( this.stockPile.node );
+//		this.appendChild( this.stockPile );
 
-		this.appendChild( this.discardPile );
+		tr.insertCell().appendChild( this.discardPile.node );
+//		this.appendChild( this.discardPile );
+
+		this.appendChild( tab );
 
 		this.appendChild( this.playerHandDiv );
 

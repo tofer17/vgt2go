@@ -8,9 +8,23 @@ body {
 	cursor: pointer;
 }
 
+.vgtcardgroup {
+	margin-left: 40px;
+}
+
 .vgtcard {
 	cursor: default;
 	border: 2px solid white;
+	
+	
+	width: 100px;
+	height: 146px;
+	margin-left: -40px;
+	position: relative;
+	float:left;
+	background: url("./vgt2go/resources/Svg-cards-2.0.png");
+	background-size: 1300px 730px;
+	
 }
 
 .cardHover {

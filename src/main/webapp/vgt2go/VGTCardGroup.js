@@ -38,26 +38,32 @@ class VGTCardGroup extends VGTComponent {
 		}
 
 		this.node.innerHTML = "";
-		const tab = document.createElement( "table" );
-		const tr = tab.insertRow();
-		let td;
+		//const tab = document.createElement( "table" );
+		//const tr = tab.insertRow();
+		//let td;
 
 		if ( this.type == _TYPES.FaceDown ) {
-			td = tr.insertCell();
+			//td = tr.insertCell();
 			const card = this.cards[ 0 ];
-			td.appendChild( this.cards.length > 0 ? card.node : this.emptyCard.node );
+			//td.appendChild( this.cards.length > 0 ? card.node : this.emptyCard.node );
+			this.appendChild( this.cards.length > 0 ? card.node : this.emptyCard.node );
 		} else if ( this.type == _TYPES.FaceUp ) {
-			td = tr.insertCell();
+			//td = tr.insertCell();
 			const card = this.cards[ this.cards.length - 1 ];
-			td.appendChild( card != null ? card.node : this.emptyCard.node );
+			//td.appendChild( card != null ? card.node : this.emptyCard.node );
+			this.appendChild( card != null ? card.node : this.emptyCard.node );
 		} else if ( this.type == _TYPES.RTL ) {
 			for ( let card of this.cards ) {
-				td = tr.insertCell();
-				td.appendChild( card.node );
+				//td = tr.insertCell();
+				//td.appendChild( card.node );
+				this.appendChild( card.node );
 			}
 		}
 
-		this.appendChild( tab );
+		const clear = document.createElement( "div" );
+		clear.style.clear = "both";
+		this.appendChild( clear );
+		//this.appendChild( tab );
 	};
 
 	get length () {
