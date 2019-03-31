@@ -4,19 +4,18 @@
 
 .pinpad {
 	text-align: center;
-	width: 100%;
 }
 
 .pinpad .small {
 	cursor: default;
 	width: 2.5em;
-	Xheight: 3em;
 	border: 2px solid gray;
 	background: #ccc;
 	padding: 1.25em 1.25em;
 }
 
 .pinpad .large {
+	width: 100%;
 }
 
 .pinpad .title {
