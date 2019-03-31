@@ -1,0 +1,17 @@
+@charset "UTF-8";
+
+/* VGTApp */
+
+#vgtapp h1 {
+}
+
+#vgtgamediv {
+	border: 1px solid red;
+}
+
+#vgtversion {
+	color: gray;
+	position: fixed;
+	bottom: 0;
+	right: 0;
+}

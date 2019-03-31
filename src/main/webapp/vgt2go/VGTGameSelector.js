@@ -26,12 +26,10 @@ class VGTGameSelector extends VGTComponent {
 		// TODO: stub... init() should query local storage
 		const newGames = window.importGame( "./vgt2go/games/Available.js" );
 		const oldGames = newGames;
-		Promise.all( [ newGames, oldGames ] ).then( this.postInit.bind(this) );
+		Promise.all( [ newGames, oldGames ] ).then( this.postInit.bind( this ) );
 	};
 
 	postInit ( x ) {
-		//console.log(x);
-		// x = [Module,Module] ...hmmm
 		const ul = document.createElement( "ul" );
 
 		for ( let game of AVAILABLE_GAMES ) {
@@ -45,7 +43,11 @@ class VGTGameSelector extends VGTComponent {
 			ul.appendChild( li );
 		}
 
-		this.appendChild( document.createTextNode( "Available Games" ) );
+
+		const gsTitle = document.createElement( "h2" );
+		gsTitle.appendChild( document.createTextNode( "Available Games" ) );
+
+		this.appendChild( gsTitle );
 		this.appendChild( ul );
 	};
 

@@ -41,6 +41,7 @@ class VGTGame extends VGTComponent {
 	};
 
 	init () {
+		super.init();
 
 		this.playerInfoDiv = document.createElement( "div" );
 

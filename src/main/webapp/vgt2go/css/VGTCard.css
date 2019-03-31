@@ -1,0 +1,35 @@
+@charset "UTF-8";
+
+/* VGTCard */
+
+
+.vgtcard {
+	cursor: default;
+	border: 2px solid white;
+	
+	
+	width: 100px;
+	height: 146px;
+	margin-left: -40px;
+	position: relative;
+	float:left;
+	background: url("../resources/Svg-cards-2.0.png");
+	background-size: 1300px 730px;
+	
+}
+
+.cardHover {
+	border: 2px dashed gray;
+}
+
+.redsuit {
+	color: red;
+}
+
+.blacksuit {
+	color: black;
+}
+
+.backsuit {
+	color: blue;
+}

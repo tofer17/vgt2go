@@ -25,6 +25,8 @@ class VGTCardGroup extends VGTComponent {
 	};
 
 	init () {
+		super.init();
+
 		if ( this.type != null ) {
 			this.node.classList.add( this.type );
 		}

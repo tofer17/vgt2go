@@ -101,6 +101,7 @@ class VGTCard extends VGTComponent {
 	};
 
 	init () {
+		super.init();
 
 		this.faceUp = this.facingUp;
 

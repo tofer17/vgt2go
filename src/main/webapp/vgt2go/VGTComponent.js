@@ -25,7 +25,9 @@ class VGTComponent extends EventTarget {
 	};
 
 	init () {
-		;
+		if ( this.constructor.name != "VGTComponent" ) {
+			Utils.importCSS( this.constructor.name );
+		}
 	};
 
 	get node () {

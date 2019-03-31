@@ -7,7 +7,7 @@ import { VGTComponent } from "./VGTComponent.js"
 class VGTTable extends VGTComponent {
 	constructor () {
 		super( "div", "vgttable" );
-		this.activePlayer;
+		this.activePlayer = null;
 	};
 
 	init () {

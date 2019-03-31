@@ -1,0 +1,21 @@
+@charset "UTF-8";
+
+/* VGTGameSelector */
+#vgtgameselector h2 {
+}
+
+#vgtgameselector ul {
+	font-size: 3em;
+}
+
+#vgtgameselector li {
+	border: 1px solid #77f;
+	background: #ddd;
+	width: 90%;
+	margin-bottom: 0.5em;
+}
+
+.vgtnewgame {
+	font-weight: bold;
+	cursor: pointer;
+}

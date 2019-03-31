@@ -50,6 +50,28 @@ class Utils {
 	static get id () {
 		return crud.next().value;
 	};
+
+	static importCSS ( comp ) {
+
+		comp += ".css";
+
+		if ( document.getElementById( comp ) ) {
+			return;
+		}
+
+		const head  = document.getElementsByTagName( "head" )[0];
+		const link  = document.createElement( "link" );
+		link.id = comp;
+		link.rel = "stylesheet";
+		link.type = "text/css";
+		link.media = "all";
+		link.href = "./vgt2go/css/" + comp;
+		link.addEventListener( "error", ( e ) => {
+			head.removeChild( link );
+		});
+
+		head.appendChild( link );
+	};
 }
 
 const crud = Utils.Ids();
