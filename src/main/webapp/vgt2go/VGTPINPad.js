@@ -10,9 +10,12 @@ class VGTPINPad extends VGTComponent {
 		this.entry = "";
 
 		this.title = document.createElement( "div" );
+		this.title.classList.add( "title" );
 		this.setTitle( title ? title : "" );
 
 		this.display = document.createElement( "div" );
+		this.display.classList.add( "display" );
+		this.display.classList.add( "invalid" );
 
 		this.bs = document.createElement( "button" );
 		this.bs.disabled = true;
@@ -42,6 +45,7 @@ class VGTPINPad extends VGTComponent {
 		super.init();
 
 		this.small = document.createElement( "div" );
+		this.small.classList.add( "small" );
 		this.small.innerHTML = "P I N";
 		this.small.style.cursor = "default";
 		this.small.style.display = "none";
@@ -164,6 +168,7 @@ class VGTPINPad extends VGTComponent {
 		this.controls.style.display = "none";
 
 		this.large = document.createElement( "div" );
+		this.large.classList.add( "large" );
 		this.large.appendChild( this.title );
 		this.large.appendChild( t );
 
@@ -196,6 +201,8 @@ class VGTPINPad extends VGTComponent {
 			text = "Incorrect.";
 		}
 
+		this.display.classList.add( "incorrect" );
+
 		this.visible = true;
 		this.display.innerHTML = text;
 		this.entry = "";
@@ -212,8 +219,12 @@ class VGTPINPad extends VGTComponent {
 	update () {
 		if ( this.entry.length < 1 ) {
 			this.display.innerHTML = "Input PIN";
+			this.display.classList.remove( "incorrect" );
+			this.display.classList.add( "invalid" );
 		} else {
 			this.display.innerHTML = "";
+			this.display.classList.remove( "incorrect" );
+			this.display.classList.remove( "invalid" );
 			for ( let i = 0; i < this.entry.length; i++ ) {
 				this.display.innerHTML += i < this.entry.length - 1 ? "*" : this.entry.charAt(i);
 			}

@@ -43,9 +43,11 @@ class VGTGame extends VGTComponent {
 	init () {
 		super.init();
 
+		this.app.gameTitle = this.title;
+
 		this.playerInfoDiv = document.createElement( "div" );
 
-		this.node.appendChild( document.createTextNode( this.title ) );
+		//this.node.appendChild( document.createTextNode( this.title ) );
 		this.node.appendChild( this.playerInfoDiv );
 		this.node.appendChild( this.gameOpts.node );
 		this.node.appendChild( this.startControls.node );

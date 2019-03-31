@@ -13,6 +13,7 @@ class VGTApp extends VGTComponent {
 		this.newGames = [];
 		this.game = null;
 
+		this.title = null;
 		this.gameSelector = null;
 		this.gameDiv = null;
 
@@ -24,8 +25,8 @@ class VGTApp extends VGTComponent {
 
 		window.history.replaceState( "vgt2go>main", null, null );
 
-		const vgtTitle = document.createElement( "h1" );
-		vgtTitle.appendChild( document.createTextNode ( "VGT 2 Go" ) );
+		this.title = document.createElement( "h1" );
+		this.title.appendChild( document.createTextNode ( "VGT 2 Go" ) );
 
 		const vgtVersion = document.createElement( "div" );
 		vgtVersion.id = "vgtversion";
@@ -37,7 +38,7 @@ class VGTApp extends VGTComponent {
 
 		this.gameDiv = new VGTComponent( "div", "vgtgamediv" );
 
-		this.appendChild( vgtTitle );
+		this.appendChild( this.title );
 		this.appendChild( this.gameSelector );
 		this.appendChild( this.gameDiv );
 		this.appendChild( vgtVersion );
@@ -55,6 +56,10 @@ class VGTApp extends VGTComponent {
 		this.gameDiv.appendChild( this.game );
 
 		this.game.setup();
+	};
+
+	set gameTitle ( gameTitle ) {
+		this.title.innerHTML = "VGT 2 Go : " + gameTitle;
 	};
 
 	handleEvent ( event ) {
