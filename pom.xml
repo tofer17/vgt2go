@@ -13,6 +13,7 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<jetty.version>9.4.9.v20180320</jetty.version>
+		<google.appengine.version>1.9.73</google.appengine.version>
 	</properties>
 	<build>
 		<plugins>
@@ -32,6 +33,11 @@
 						</baseResource>
 					</webApp>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>com.google.appengine</groupId>
+				<artifactId>appengine-maven-plugin</artifactId>
+				<version>${google.appengine.version}</version>
 			</plugin>
 		</plugins>
 
