@@ -2,5 +2,13 @@
 
 body {
 	font-family: sans-serif;
+	margin: 0;
 }
 
+.clear:after {
+	content: "";
+	visibility: hidden;
+	display: block;
+	height: 0;
+	clear: both;
+}

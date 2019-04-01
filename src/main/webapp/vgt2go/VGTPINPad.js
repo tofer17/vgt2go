@@ -185,6 +185,7 @@ class VGTPINPad extends VGTComponent {
 	setSmall ( small ) {
 		this.small.style.display = small ? "" : "none";
 		this.large.style.display = small ? "none" : "";
+		this.dispatchEvent( new Event( small ? "lower" : "raise" ) );
 	};
 
 	setTitle ( title ) {

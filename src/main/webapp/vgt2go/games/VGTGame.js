@@ -120,7 +120,7 @@ class VGTGame extends VGTComponent {
 		if ( this.currentPlayerIndex < 0 ) {
 			this.currentPlayerIndex = this.players.length - 1;
 		} else if ( allowNew && this.currentPlayerIndex >= this.players.length && this.currentPlayerIndex <= this.gameOpts.opts.maxPlayers.value ) {
-			this.addPlayer( new VGTPlayer( "", "" ) );
+			this.addPlayer( new VGTPlayer( this, "", "" ) );
 		} else if ( !allowNew && this.currentPlayerIndex >= this.players.length ) {
 			this.currentPlayerIndex = 0;
 		} else if ( this.currentPlayerIndex > this.gameOpts.opts.maxPlayers.value ) {

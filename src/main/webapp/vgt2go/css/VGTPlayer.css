@@ -2,3 +2,54 @@
 
 /* VGTPlayer */
 
+.vgtplayer {
+	width: 100%;
+	xbackground: #777;
+}
+.vgtplayermetarow {
+	font-size: 12px;
+	text-align: right;
+}
+.vgtplayermetarow span {
+	margin: 0 2px 0 2px;
+	display: inline-block;
+	font-size: 16px;
+}
+
+.vgtplayermetan {
+}
+
+.vgtplayermetaoo {
+}
+
+.vgtplayermetam {
+}
+
+.vgtplayerrow {
+	width: 100%;
+	display: flex;
+	xbackground: #999;
+	flex-direction: row;
+}
+
+
+.vgtplayer input {
+	font-size: 2.5em;
+	flex: auto;
+	margin: 5px;
+}
+
+.vgtplayer .pinpad {
+	xwidth: 4rem;
+	xmargin-right: 5px;
+	padding: 5px 5px;
+}
+
+.vgtplayer .vgtavatarmaker {
+	width: 4em;
+	height: 4em;
+	text-align: center;
+	background: #e77;
+	border: 3px solid gray;
+}
+
