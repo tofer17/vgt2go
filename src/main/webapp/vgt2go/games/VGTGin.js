@@ -338,4 +338,4 @@ function launch ( app ) {
 	return new VGTGin( app );
 }
 
-export { launch };
+export { VGTGin, launch };

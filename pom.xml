@@ -29,7 +29,7 @@
 						</_initParams>
 						<baseResource
 							implementation="org.eclipse.jetty.util.resource.ResourceCollection">
-							<resourcesAsCSV>${project.basedir}/src/main/webapp,${project.basedir}/src/test/webapp</resourcesAsCSV>
+							<resourcesAsCSV>${project.basedir}/src/test/webapp,${project.basedir}/src/main/webapp</resourcesAsCSV>
 						</baseResource>
 					</webApp>
 				</configuration>
