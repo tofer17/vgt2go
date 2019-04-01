@@ -20,7 +20,7 @@ class VGTStartControls extends VGTComponent {
 		super.init();
 
 		this.previousPlayer = document.createElement( "button" );
-		this.previousPlayer.id = "previousPlayer";
+		this.previousPlayer.id = "vgtstcopp";
 		this.previousPlayer.innerHTML = "Previous Player";
 		Object.defineProperty( this.previousPlayer, "enabled", {
 			get () { return !this.disabled },
@@ -28,7 +28,7 @@ class VGTStartControls extends VGTComponent {
 		});
 
 		this.nextPlayer = document.createElement( "button" );
-		this.nextPlayer.id = "nextPlayer";
+		this.nextPlayer.id = "vgtstconp";
 		this.nextPlayer.innerHTML = "Next Player";
 		Object.defineProperty( this.nextPlayer, "enabled", {
 			get () { return !this.disabled },
@@ -36,7 +36,7 @@ class VGTStartControls extends VGTComponent {
 		});
 
 		this.startGame = document.createElement( "button" );
-		this.startGame.id = "startGame";
+		this.startGame.id = "vgtstcosg";
 		this.startGame.innerHTML = "Start";
 		Object.defineProperty( this.startGame, "enabled", {
 			get () { return !this.disabled },
@@ -44,7 +44,7 @@ class VGTStartControls extends VGTComponent {
 		});
 
 		this.cancelGame = document.createElement( "button" );
-		this.cancelGame.id = "cancelGame";
+		this.cancelGame.id = "vgtstcocg";
 		this.cancelGame.innerHTML = "Cancel";
 		Object.defineProperty( this.cancelGame, "enabled", {
 			get () { return !this.disabled },
@@ -52,7 +52,7 @@ class VGTStartControls extends VGTComponent {
 		});
 
 		this.deletePlayer = document.createElement( "button" );
-		this.deletePlayer.id = "deletePlayer";
+		this.deletePlayer.id = "vgtstcodp";
 		this.deletePlayer.innerHTML = "Delete";
 		Object.defineProperty( this.deletePlayer, "enabled", {
 			get () { return !this.disabled },
