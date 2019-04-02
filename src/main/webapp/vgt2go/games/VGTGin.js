@@ -230,23 +230,29 @@ class VGTGin extends VGTGame {
 
 		if ( event.type == "drop" ) {
 
-			if ( this.dropping == null ) { // off-drop
+			if ( this.dropping == null ) {
+				// off-drop
 				; // nop
-			} else if ( this.dragging.srcPile == this.dropping.card.pile ) { // Rearranging
+			} else if ( this.dragging.srcPile == this.dropping.card.pile ) {
+				// Rearranging
 				; // nop
 			} else if ( this.currentPlayer.hand.length == 10 && this.dropping.card.pile == this.discards) {
-				//console.log( "Just discarded-- next player" );
+				// Just discarded-- next player
 				this.table.visible = false;
 				this.shiftCurrentPlayer( 1, false );
 				this.ginButton.disabled = true;
+				// FIXME: Check for empty deck and shuffle.
 			} else if ( this.currentPlayer.hand.length == 11 && this.dropping.card.pile == this.currentPlayer.hand ) {
-				//console.log( "Just drew a card." );
+				// Just drew a card
 
 				this.deck.draggable = false;
 				this.deck.droppable = false;
 
 				this.discards.draggable = false;
 				this.discards.droppable = true;
+
+				this.currentPlayer.hand.draggable = true;
+				this.currentPlayer.hand.droppable = true;
 
 				this.ginButton.disabled = false;
 			}

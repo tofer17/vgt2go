@@ -71,7 +71,12 @@ class VGTCardGroup extends VGTComponent {
 	};
 
 	removeJokers () {
-		this.cards = this.cards.filter( card => card.suit != VGTCard.JOKER_SUIT );
+		this.cards = this.cards.filter( ( card ) => {
+			if ( card.suit == VGTCard.JOKER_SUIT ) {
+				card.removeEventListener( "click", this, false );
+			}
+			return card.suit != VGTCard.JOKER_SUIT
+		});
 
 		this.update();
 	};
@@ -99,6 +104,7 @@ class VGTCardGroup extends VGTComponent {
 			const card = this.cards.pop();
 
 			card.pile = null;
+			card.removeEventListener( "click", this, false );
 			ret.push( card );
 		}
 
@@ -116,7 +122,7 @@ class VGTCardGroup extends VGTComponent {
 
 				card.pile = this;
 				this.cards.push( card );
-				card.removeEventListener( "click", this, false );
+				//card.removeEventListener( "click", this, false );
 
 				card.addEventListener( "click", this, false );
 
@@ -135,7 +141,7 @@ class VGTCardGroup extends VGTComponent {
 
 		this.cards.splice( index, 1 );
 		card.pile = null;
-		card.removeEventListener( "click", this );
+		card.removeEventListener( "click", this, false );
 
 		this.update();
 		return card;
@@ -143,7 +149,7 @@ class VGTCardGroup extends VGTComponent {
 
 	handleEvent ( event ) {
 		// Gets called twice sometimes
-		console.log( event.type );
+		console.log( event.type, event.target );
 	};
 
 	/*
@@ -154,8 +160,10 @@ class VGTCardGroup extends VGTComponent {
 	addCardAt ( card, dst ) {
 		let index = isFinite( dst ) ? dst : this.cards.indexOf( dst );
 
+		card.addEventListener( "click", this, false );
+
 		if ( index == -1 ) {
-			return this.addCardAt( card, this.type == _TYPES.FaceUp ? 0 : Math.max(0,this.cards.length - 1 ));
+			return this.addCardAt( card, this.type == _TYPES.FaceUp ? 0 : Math.max( 0, this.cards.length - 1 ) );
 		}
 
 		if ( this.type == _TYPES.FaceUp ) {
