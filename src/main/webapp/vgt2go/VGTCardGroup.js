@@ -165,7 +165,7 @@ class VGTCardGroup extends VGTComponent {
 		card.addEventListener( "click", this, false );
 
 		if ( index == -1 ) {
-			return this.addCardAt( card, this.type == _TYPES.FaceUp ? 0 : Math.max( 0, this.cards.length - 0 ) );
+			return this.addCardAt( card, this.type == _TYPES.FaceUp ? 0 : Math.max( 0, this.cards.length - ( this.type == _TYPES.RTL ? 0 : 1 ) ) );
 		}
 
 		if ( this.type == _TYPES.FaceUp ) {
