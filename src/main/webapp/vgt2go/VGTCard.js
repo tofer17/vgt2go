@@ -64,6 +64,9 @@ const JOKER_SUIT = new VGTSuit( "X", "Joker", 100 );
 const EMPTY_SUIT = new VGTSuit( "e", "Empty", 101 );
 const BACK_SUIT = new VGTSuit( "b", "Back", 101 );
 
+const CARDPNGDIMS = { width : 1300, height : 730 };
+const CARDBACKPOS = { x : 12, y : 4 };
+
 class VGTCard extends VGTComponent {
 	constructor ( rank, suit ) {
 		super( "div", null, "vgtcard" );
@@ -74,6 +77,11 @@ class VGTCard extends VGTComponent {
 
 		this.facingUp = true;
 		this.pile = null;
+
+		this.width = CARDPNGDIMS.width / 13;
+		this.height = CARDPNGDIMS.height / 5;
+
+		this.canClick = true;
 	};
 
 	get faceUp () {
@@ -90,13 +98,18 @@ class VGTCard extends VGTComponent {
 			this.node.classList.remove( "blacksuit" );
 			this.node.classList.add( "backsuit" );
 			this.node.id = "";
-			this.node.style.backgroundPosition = ( ( 2 ) * -100) + "px " + ( ( 4 ) * -146) + "px";
+			this.node.style.backgroundPosition = ( ( CARDBACKPOS.x ) * ( -1 * this.width ) ) + "px " + ( ( CARDBACKPOS.y ) * ( -1 * this.height ) ) + "px";
 		} else {
 			this.node.innerHTML = "";
 			this.node.classList.remove( "backsuit" );
 			this.node.classList.add( this.suit.color + "suit" );
-			this.node.id = "vgtcard-" + this.rank.id + this.suit.id
-			this.node.style.backgroundPosition = ( ( this.rank.order - 1 ) * -100) + "px " + ( ( this.suit.order - 1 ) * -146) + "px";
+			this.node.id = "vgtcard-" + this.rank.id + this.suit.id;
+			if ( this.suit != JOKER_SUIT ) {
+				this.node.style.backgroundPosition = ( ( this.rank.order - 1 ) * ( -1 * this.width ) ) + "px " + ( ( this.suit.order - 1 ) * ( -1 * this.height ) ) + "px";
+			} else {
+				// FIXME: Ideally this should be reflected properly in Joker rank/suit.
+				this.node.style.backgroundPosition = ( ( this.rank.order - 101 ) * ( -1 * this.width ) ) + "px " + ( ( 4 ) * ( -1 * this.height ) ) + "px";
+			}
 		}
 	};
 
@@ -109,16 +122,20 @@ class VGTCard extends VGTComponent {
 		this.droppable = true;
 
 		this.node.addEventListener( "mouseenter", (e) => {
-			e.target.classList.toggle( "cardHover" );
+			e.target.classList.toggle( "cardHover", true );
 		}, false );
 
 		this.node.addEventListener( "mouseleave", (e) => {
-			e.target.classList.toggle( "cardHover" );
+			e.target.classList.toggle( "cardHover", false );
 		}, false );
 
 		this.node.addEventListener( "click", this, false );
 
 		this.node.card = this;
+
+		if ( !GlobalVGTCard.stylesheet ) {
+			VGTCard.setCardStyle( this.width + "px", this.height + "px", "../resources/Cards_1a.png", CARDPNGDIMS.width + "px", CARDPNGDIMS.height + "px" );
+		}
 	};
 
 	get draggable () {
@@ -146,12 +163,22 @@ class VGTCard extends VGTComponent {
 		}
 	};
 
+	get clickable () {
+		return this.canClick;
+	};
+
+	set clickable ( clickable ) {
+		this.canClick = clickable;
+	};
+
 	toString () {
 		return this.id;
 	};
 
 	handleEvent ( event ) {
-		if ( event.type == "click" ) {
+		event.preventDefault();
+
+		if ( event.type == "click" && this.canClick ) {
 			this.dispatchEvent( new Event( "click" ) );
 		}
 	}
@@ -180,6 +207,44 @@ class VGTCard extends VGTComponent {
 		return new VGTCard( new VGTRank( 0, "Back", 101 ), BACK_SUIT );
 	};
 
+	static setCardStyle ( cardWidth, cardHeight, bkgUrl, bkgWidth, bkgHeight ) {
+
+		if ( !GlobalVGTCard.stylesheet || GlobalVGTCard.stylesheet == "loading" ) {
+
+			if ( GlobalVGTCard.stylesheet == "loading" ) {
+				return;
+			}
+
+			GlobalVGTCard.stylesheet = "loading";
+
+			const loadFunc = ( event ) => {
+
+				event.target.removeEventListener( "load", loadFunc, false );
+
+				GlobalVGTCard.stylesheet = document.getElementById( "VGTCard.css" ).sheet;
+
+				const i = GlobalVGTCard.stylesheet.insertRule( ".vgtcard {}", 0 );
+
+				GlobalVGTCard.cssRule = GlobalVGTCard.stylesheet.cssRules[ i ];
+
+				VGTCard.setCardStyle ( cardWidth, cardHeight, bkgUrl, bkgWidth, bkgHeight );
+			};
+
+			document.getElementById( "VGTCard.css" ).addEventListener( "load", loadFunc, false );
+
+			return;
+		}
+
+		GlobalVGTCard.cssRule.style.width = cardWidth;
+		GlobalVGTCard.cssRule.style.height = cardHeight;
+		GlobalVGTCard.cssRule.style.background = "url('" + bkgUrl + "')";
+		GlobalVGTCard.cssRule.style.backgroundSize = bkgWidth + " " + bkgHeight;
+
+	};
+
 }
+
+const GlobalVGTCard = {};
+window.vgt.GlobalVGTCard = GlobalVGTCard;
 
 export { VGTCard };
