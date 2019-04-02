@@ -47,7 +47,6 @@ class VGTGame extends VGTComponent {
 
 		this.playerInfoDiv = document.createElement( "div" );
 
-		//this.node.appendChild( document.createTextNode( this.title ) );
 		this.node.appendChild( this.playerInfoDiv );
 		this.node.appendChild( this.gameOpts.node );
 		this.node.appendChild( this.startControls.node );
@@ -87,7 +86,6 @@ class VGTGame extends VGTComponent {
 
 	start () {
 		this.pinPad.setControlsVisible( false );
-		//this.playerInfo.visible = false;
 		this.currentPlayer.visible = false;
 		this.gameOpts.visible = false;
 		this.startControls.visible = false;
@@ -142,7 +140,6 @@ class VGTGame extends VGTComponent {
 				this.startControls.visible = true;
 			}
 		}
-
 	};
 
 	handleEvent ( event ) {
@@ -189,12 +186,12 @@ class VGTGame extends VGTComponent {
 		} else if ( event.type == "dragenter" ) {
 			this.dropping = getDroppableParent( event.target );
 			if ( this.dropping != null ) {
-				//this.dropping.style.background = "purple";
+				this.dropping.classList.add( "cardHover" );
 			}
 		} else if ( event.type == "dragleave" ) {
 			this.dropping = getDroppableParent( event.target );
 			if ( this.dropping != null ) {
-				//this.dropping.style.background = "";
+				this.dropping.classList.remove( "cardHover" );
 			}
 		} else if ( event.type == "drop" ) {
 			event.preventDefault();
@@ -202,7 +199,7 @@ class VGTGame extends VGTComponent {
 			this.dropping = getDroppableParent( event.target );
 
 			if ( this.dropping != null ) {
-				//this.dropping.style.background = "";
+				this.dropping.classList.remove( "cardHover" );
 
 				if ( this.dragging.card.pile == this.dropping.card.pile ) {
 					this.dragging.card.pile.reorder( this.dragging.card, this.dropping.card );

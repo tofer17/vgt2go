@@ -26,11 +26,9 @@ class VGTGinTable extends VGTCardTable {
 
 		const tab = document.createElement( "table" );
 		const tr = tab.insertRow();
-		tr.insertCell().appendChild( this.stockPile.node );
-//		this.appendChild( this.stockPile );
 
+		tr.insertCell().appendChild( this.stockPile.node );
 		tr.insertCell().appendChild( this.discardPile.node );
-//		this.appendChild( this.discardPile );
 
 		this.appendChild( tab );
 
@@ -38,7 +36,6 @@ class VGTGinTable extends VGTCardTable {
 
 		this.stockPile.addEventListener( "change", this, false );
 		this.discardPile.addEventListener( "change", this, false );
-
 	};
 
 	setActivePlayer ( player ) {
@@ -121,10 +118,6 @@ class VGTGin extends VGTGame {
 		this.table.visible = false;
 
 		this.ginButton.addEventListener( "click", this, false );
-
-		//this.addPlayer( new VGTPlayer( "cm", "1" ) );
-		//this.addPlayer( new VGTPlayer( "dm", "2" ) );
-		//this.addPlayer( new VGTPlayer( "am", "3" ) );
 	};
 
 	setup () {
@@ -186,7 +179,6 @@ class VGTGin extends VGTGame {
 		this.table.visible = true;
 
 		this.ginButton.style.display = "";
-
 	};
 
 	checkMelds () {
@@ -210,7 +202,49 @@ class VGTGin extends VGTGame {
 		} else {
 			Promise.resolve().then( ()=>{ window.alert( "Nope!!" );} );
 		}
+	};
 
+	drew () {
+		this.deck.draggable = false;
+		this.deck.droppable = false;
+
+		this.discards.draggable = false;
+		this.discards.droppable = true;
+
+		this.currentPlayer.hand.draggable = true;
+		this.currentPlayer.hand.droppable = true;
+
+		this.ginButton.disabled = false;
+	};
+
+	discarded () {
+
+		this.table.visible = false;
+
+		this.shiftCurrentPlayer( 1, false );
+
+		this.ginButton.disabled = true;
+		// FIXME: Check for empty deck and shuffle.
+
+		if ( this.deck.length < 1 ) {
+	console.error("Shuffle!");
+			while ( this.discards.length > 0 ) {
+				const card = this.discards.deal(1);
+				card.faceUp = false;
+				this.deck.add( card );
+			}
+
+			this.deck.shuffle();
+		}
+
+		this.deck.draggable = true;
+		this.deck.droppable = false;
+
+		this.discards.draggable = false;
+		this.discards.droppable = false;
+
+		this.currentPlayer.hand.draggable = true;
+		this.currentPlayer.hand.droppable = true;
 	};
 
 	handleEvent ( event ) {
@@ -229,7 +263,6 @@ class VGTGin extends VGTGame {
 			// Drawing a card...
 			if ( event.target != this.currentPlayer.hand ) {
 				// ...from stock or discard pile
-				console.log( "draw", event.targetCard );
 
 				event.target.removeCard( event.targetCard );
 				event.targetCard.faceUp = true;
@@ -242,34 +275,14 @@ class VGTGin extends VGTGame {
 			// Discarding a card...
 			if ( event.target == this.currentPlayer.hand ) {
 				// ...from player-hand
-				console.log( "discard", event.targetCard );
-				event.target.removeCard( event.targetCard );
+
+				const t = event.target.removeCard( event.targetCard );
+
 				this.discards.addCardAt( event.targetCard );
 
 				this.discarded();
 			} // else ignore deck or discard click.
 		}
-	}
-
-	drew () {
-		this.deck.draggable = false;
-		this.deck.droppable = false;
-
-		this.discards.draggable = false;
-		this.discards.droppable = true;
-
-		this.currentPlayer.hand.draggable = true;
-		this.currentPlayer.hand.droppable = true;
-
-		this.ginButton.disabled = false;
-	};
-
-	discarded () {
-		this.table.visible = false;
-		this.shiftCurrentPlayer( 1, false );
-		this.ginButton.disabled = true;
-		// FIXME: Check for empty deck and shuffle.
-
 	};
 
 	handleDragEvent ( event ) {

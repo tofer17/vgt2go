@@ -2,3 +2,6 @@
 
 /* VGTGame */
 
+.dragHilight {
+	border: 2px dashed red;
+}

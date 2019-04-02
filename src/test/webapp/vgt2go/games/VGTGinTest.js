@@ -17,6 +17,10 @@ class VGTGinTest extends VGTGin {
 		this.addPlayer( new VGTPlayer( this, "cm", "1" ) );
 		this.addPlayer( new VGTPlayer( this, "dm", "2" ) );
 		this.addPlayer( new VGTPlayer( this, "am", "3" ) );
+		
+		if ( 1 == 1 ) {
+			this.deck.deal(20);
+		}
 	};
 
 }

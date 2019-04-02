@@ -171,8 +171,8 @@ class VGTCard extends VGTComponent {
 		this.canClick = clickable;
 	};
 
-	toString () {
-		return this.id;
+	toString ( debug ) {
+		return this.id + debugCard( debug, this );
 	};
 
 	handleEvent ( event ) {
@@ -242,6 +242,12 @@ class VGTCard extends VGTComponent {
 
 	};
 
+}
+
+function debugCard ( debug, card ) {
+	return !debug ? "" :( card.clickable ? "C" : "c" ) +
+			( card.draggable ? "D" : "d" ) +
+			( card.droppable ? "P" : "p" );
 }
 
 const GlobalVGTCard = {};

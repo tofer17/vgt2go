@@ -123,10 +123,8 @@ class VGTCardGroup extends VGTComponent {
 
 				card.pile = this;
 				this.cards.push( card );
-				//card.removeEventListener( "click", this, false );
 
 				card.addEventListener( "click", this, false );
-
 			}
 		}
 
@@ -207,19 +205,46 @@ class VGTCardGroup extends VGTComponent {
 
 	set clickable ( clickable ) {
 		this.canClick = clickable;
+
+		for ( let card of this.cards ) {
+			card.clickable = clickable;
+		}
+
+		this.cardBack.droppable = droppable;
+		this.emptyCard.droppable = droppable;
 	};
 
 	set draggable ( draggable ) {
 		for ( let card of this.cards ) {
 			card.draggable = draggable;
 		}
+
+		this.cardBack.draggable = draggable;
+		this.emptyCard.draggable = draggable;
 	};
 
 	set droppable ( droppable ) {
 		for ( let card of this.cards ) {
 			card.droppable = droppable;
 		}
-	}
+
+		this.cardBack.droppable = droppable;
+		this.emptyCard.droppable = droppable;
+	};
+
+	toString ( debug ) {
+		let s = this.id + ":" + this.type + ":" +
+			( this.clickable ? 1 : 0 ) +
+			( this.draggable ? 1 : 0 ) +
+			( this.droppable ? 1 : 0 ) +
+			":(" + this.length + "):[";
+		for ( let i = 0; i < this.length; i++ ) {
+			s += (i>0?",":"") + this.cards[i].toString( debug );
+		}
+		s += "]";
+
+		return s;
+	};
 
 	static get TYPES () {
 		return _TYPES;

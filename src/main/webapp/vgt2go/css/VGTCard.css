@@ -5,14 +5,14 @@
 
 .vgtcard {
 	cursor: default;
-	border: 2px solid white;
+	Xborder: 2px solid white;
 	margin-left: -40px;
 	position: relative;
 	float:left;
 }
 
 .cardHover {
-	border: 2px dashed gray;
+	border: 2px dashed green;
 }
 
 .redsuit {
