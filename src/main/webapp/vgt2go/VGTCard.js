@@ -116,6 +116,7 @@ class VGTCard extends VGTComponent {
 			e.target.classList.toggle( "cardHover" );
 		}, false );
 
+		this.node.addEventListener( "click", this, false );
 
 		this.node.card = this;
 	};
@@ -148,6 +149,12 @@ class VGTCard extends VGTComponent {
 	toString () {
 		return this.id;
 	};
+
+	handleEvent ( event ) {
+		if ( event.type == "click" ) {
+			this.dispatchEvent( new Event( "click" ) );
+		}
+	}
 
 	static get STANDARD_SUITS () {
 		return STANDARD_SUITS;

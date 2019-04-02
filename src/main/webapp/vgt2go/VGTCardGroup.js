@@ -40,24 +40,15 @@ class VGTCardGroup extends VGTComponent {
 		}
 
 		this.node.innerHTML = "";
-		//const tab = document.createElement( "table" );
-		//const tr = tab.insertRow();
-		//let td;
 
 		if ( this.type == _TYPES.FaceDown ) {
-			//td = tr.insertCell();
 			const card = this.cards[ 0 ];
-			//td.appendChild( this.cards.length > 0 ? card.node : this.emptyCard.node );
 			this.appendChild( this.cards.length > 0 ? card.node : this.emptyCard.node );
 		} else if ( this.type == _TYPES.FaceUp ) {
-			//td = tr.insertCell();
 			const card = this.cards[ this.cards.length - 1 ];
-			//td.appendChild( card != null ? card.node : this.emptyCard.node );
 			this.appendChild( card != null ? card.node : this.emptyCard.node );
 		} else if ( this.type == _TYPES.RTL ) {
 			for ( let card of this.cards ) {
-				//td = tr.insertCell();
-				//td.appendChild( card.node );
 				this.appendChild( card.node );
 			}
 		}
@@ -65,7 +56,6 @@ class VGTCardGroup extends VGTComponent {
 		const clear = document.createElement( "div" );
 		clear.style.clear = "both";
 		this.appendChild( clear );
-		//this.appendChild( tab );
 	};
 
 	get length () {
@@ -90,7 +80,6 @@ class VGTCardGroup extends VGTComponent {
 		// Adapted from:
 		// https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
 		for ( let i = this.cards.length - 1; i > 0; i-- ) {
-			//const j = Math.floor( Math.random() * ( i + 1 ) );
 			const r = window.crypto.getRandomValues( new Uint32Array(1) )[ 0 ];
 			const j = Math.floor( ( r / 4294967295.0 ) * ( i + 1 ) );
 			[ this.cards[ i ], this.cards[ j ] ] = [ this.cards[ j ], this.cards[ i ] ];
@@ -127,6 +116,9 @@ class VGTCardGroup extends VGTComponent {
 
 				card.pile = this;
 				this.cards.push( card );
+				card.removeEventListener( "click", this, false );
+
+				card.addEventListener( "click", this, false );
 
 			}
 		}
@@ -143,9 +135,15 @@ class VGTCardGroup extends VGTComponent {
 
 		this.cards.splice( index, 1 );
 		card.pile = null;
+		card.removeEventListener( "click", this );
 
 		this.update();
 		return card;
+	};
+
+	handleEvent ( event ) {
+		// Gets called twice sometimes
+		console.log( event.type );
 	};
 
 	/*
