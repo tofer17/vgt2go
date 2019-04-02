@@ -153,6 +153,7 @@ class VGTGin extends VGTGame {
 				...this.deck.deal( 10 )
 			);
 			player.hand.turnAllFaceUp( true );
+			player.hand.addEventListener( "click", this, false );
 		}
 
 		if ( this.gameOpts.opts.deal.value == 0 ) {
@@ -176,6 +177,9 @@ class VGTGin extends VGTGame {
 			this.discards.draggable = true;
 			this.discards.droppable = false;
 		}
+
+		this.deck.addEventListener( "click", this, false );
+		this.discards.addEventListener( "click", this, false );
 
 		this.table.setActivePlayer( this.currentPlayer );
 
@@ -212,9 +216,60 @@ class VGTGin extends VGTGame {
 	handleEvent ( event ) {
 		if ( event.target == this.ginButton ) {
 			this.checkMelds();
+		} else if ( event.type == "click" ) {
+			this.handleClickEvent( event );
 		} else {
 			super.handleEvent( event );
 		}
+	};
+
+	handleClickEvent ( event ) {
+		const hl = this.currentPlayer.hand.length;
+		if ( hl == 10 ) {
+			// Drawing a card...
+			if ( event.target != this.currentPlayer.hand ) {
+				// ...from stock or discard pile
+				console.log( "draw", event.targetCard );
+
+				event.target.removeCard( event.targetCard );
+				event.targetCard.faceUp = true;
+				this.currentPlayer.hand.addCardAt( event.targetCard );
+
+				this.drew();
+
+			} // else ignore player-hand click
+		} else {
+			// Discarding a card...
+			if ( event.target == this.currentPlayer.hand ) {
+				// ...from player-hand
+				console.log( "discard", event.targetCard );
+				event.target.removeCard( event.targetCard );
+				this.discards.addCardAt( event.targetCard );
+
+				this.discarded();
+			} // else ignore deck or discard click.
+		}
+	}
+
+	drew () {
+		this.deck.draggable = false;
+		this.deck.droppable = false;
+
+		this.discards.draggable = false;
+		this.discards.droppable = true;
+
+		this.currentPlayer.hand.draggable = true;
+		this.currentPlayer.hand.droppable = true;
+
+		this.ginButton.disabled = false;
+	};
+
+	discarded () {
+		this.table.visible = false;
+		this.shiftCurrentPlayer( 1, false );
+		this.ginButton.disabled = true;
+		// FIXME: Check for empty deck and shuffle.
+
 	};
 
 	handleDragEvent ( event ) {
@@ -238,23 +293,10 @@ class VGTGin extends VGTGame {
 				; // nop
 			} else if ( this.currentPlayer.hand.length == 10 && this.dropping.card.pile == this.discards) {
 				// Just discarded-- next player
-				this.table.visible = false;
-				this.shiftCurrentPlayer( 1, false );
-				this.ginButton.disabled = true;
-				// FIXME: Check for empty deck and shuffle.
+				this.discarded();
 			} else if ( this.currentPlayer.hand.length == 11 && this.dropping.card.pile == this.currentPlayer.hand ) {
 				// Just drew a card
-
-				this.deck.draggable = false;
-				this.deck.droppable = false;
-
-				this.discards.draggable = false;
-				this.discards.droppable = true;
-
-				this.currentPlayer.hand.draggable = true;
-				this.currentPlayer.hand.droppable = true;
-
-				this.ginButton.disabled = false;
+				this.drew();
 			}
 		}
 	};

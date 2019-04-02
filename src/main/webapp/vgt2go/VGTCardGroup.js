@@ -22,6 +22,7 @@ class VGTCardGroup extends VGTComponent {
 		this.cards = [];
 		this.add( cards );
 
+		this.canClick = true;
 	};
 
 	init () {
@@ -148,8 +149,11 @@ class VGTCardGroup extends VGTComponent {
 	};
 
 	handleEvent ( event ) {
-		// Gets called twice sometimes
-		console.log( event.type, event.target );
+		if ( event.type == "click" && this.canClick ) {
+			const evt =  new Event( "click" );
+			evt.targetCard = event.target;
+			this.dispatchEvent( evt );
+		}
 	};
 
 	/*
@@ -163,7 +167,7 @@ class VGTCardGroup extends VGTComponent {
 		card.addEventListener( "click", this, false );
 
 		if ( index == -1 ) {
-			return this.addCardAt( card, this.type == _TYPES.FaceUp ? 0 : Math.max( 0, this.cards.length - 1 ) );
+			return this.addCardAt( card, this.type == _TYPES.FaceUp ? 0 : Math.max( 0, this.cards.length - 0 ) );
 		}
 
 		if ( this.type == _TYPES.FaceUp ) {
@@ -195,6 +199,14 @@ class VGTCardGroup extends VGTComponent {
 		}
 
 		this.update();
+	};
+
+	get clickable () {
+		return this.canClick;
+	};
+
+	set clickable ( clickable ) {
+		this.canClick = clickable;
 	};
 
 	set draggable ( draggable ) {
