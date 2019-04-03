@@ -6,6 +6,7 @@ import { VGTGameOpts } from "../VGTGameOpts.js";
 import { VGTPlayer } from "../VGTPlayer.js";
 import { VGTStartControls } from "../VGTStartControls.js";
 import { VGTPINPad } from "../VGTPINPad.js";
+import { Utils } from "../Utils.js";
 
 class VGTGame extends VGTComponent {
 	constructor ( app, title ) {
@@ -29,6 +30,15 @@ class VGTGame extends VGTComponent {
 
 		this.dragging = null;
 		this.dropping = null;
+
+		this.gameOpts.opts.first = {
+			id : "first",
+			text : "First",
+			type : "player-select",
+			value : 0
+		};
+
+		this.dragHoverClass = "dragHover";
 	};
 
 	get currentPlayer () {
@@ -102,6 +112,21 @@ class VGTGame extends VGTComponent {
 		this.dispatchEvent( new Event( "player" ) );
 	};
 
+	deletePlayer ( player ) {
+
+		if ( player == null ) {
+			player = this.currentPlayer;
+		}
+
+		this.players.splice( this.players.indexOf( player ), 1 );
+
+		player.visible = false;
+		this.playerInfoDiv.removeChild( player.node );
+		this.shiftCurrentPlayer( -1 );
+
+		this.dispatchEvent( new Event( "player" ) );
+	};
+
 	shiftCurrentPlayer ( dir, allowNew ) {
 
 		if ( this.currentPlayer != null ) {
@@ -142,6 +167,10 @@ class VGTGame extends VGTComponent {
 		}
 	};
 
+	cancelGame () {
+		console.log( "CANCEL!" );
+	};
+
 	handleEvent ( event ) {
 		if ( event instanceof DragEvent || event.dataTransfer ) {
 			this.handleDragEvent( event );
@@ -152,8 +181,7 @@ class VGTGame extends VGTComponent {
 		} else if ( event.type == "done" ) {
 			this.shiftCurrentPlayer( 0 );
 		} else if ( event.type == "delete" ) {
-			this.players.splice( this.currentPlayerIndex, 1 );
-			this.shiftCurrentPlayer( -1 );
+			this.deletePlayer();
 		} else if ( event.type == "start" ) {
 			if ( this.currentPlayerIndex != 0 ) {
 				this.shiftCurrentPlayer( -this.currentPlayerIndex );
@@ -161,7 +189,7 @@ class VGTGame extends VGTComponent {
 				this.start();
 			}
 		} else if ( event.type == "cancel" ) {
-			console.log( "CANCEL!" );
+			this.cancelGame();
 		} else if ( event.target instanceof VGTPlayer ) {
 			this.dispatchEvent( new Event( "player" ) );
 		} else {
@@ -177,39 +205,27 @@ class VGTGame extends VGTComponent {
 			;
 		} else if ( event.type == "dragstart" ) {
 			this.dragging = event.target;
-			this.dragging.srcPile = this.dragging.card.pile;
+// ??		this.dragging.srcPile = this.dragging.card.pile;
 			event.target.style.opacity = 0.5;
 		} else if ( event.type == "dragend" ) {
 			event.target.style.opacity = "";
 		} else if ( event.type == "dragover" ) {
 			event.preventDefault();
 		} else if ( event.type == "dragenter" ) {
-			this.dropping = getDroppableParent( event.target );
+			//this.dropping = getDroppableParent( event.target );
+			this.dropping = Utils.getClassedParent( event.target, "droppable" );
 			if ( this.dropping != null ) {
-				this.dropping.classList.add( "cardHover" );
+				this.dropping.classList.add( this.dragHoverClass );
 			}
 		} else if ( event.type == "dragleave" ) {
-			this.dropping = getDroppableParent( event.target );
+			//this.dropping = getDroppableParent( event.target );
+			this.dropping = Utils.getClassedParent( event.target, "droppable" );
 			if ( this.dropping != null ) {
-				this.dropping.classList.remove( "cardHover" );
+				this.dropping.classList.remove( this.dragHoverClass );
 			}
 		} else if ( event.type == "drop" ) {
 			event.preventDefault();
-
-			this.dropping = getDroppableParent( event.target );
-
-			if ( this.dropping != null ) {
-				this.dropping.classList.remove( "cardHover" );
-
-				if ( this.dragging.card.pile == this.dropping.card.pile ) {
-					this.dragging.card.pile.reorder( this.dragging.card, this.dropping.card );
-				} else {
-					this.dragging.card.pile.removeCard( this.dragging.card );
-					this.dragging.card.faceUp = true;
-					this.dropping.card.pile.addCardAt( this.dragging.card, this.dropping.card );
-				}
-
-			}
+			this.dropping.classList.remove( this.dragHoverClass );
 		} else {
 			console.error( "HTH!?!", event );
 		}
@@ -217,7 +233,7 @@ class VGTGame extends VGTComponent {
 
 }
 
-function getDroppableParent ( target ) {
+function XgetDroppableParent ( target ) {
 	let dropZone = null;
 	while ( dropZone == null && target != null ) {
 		if ( target.classList && target.classList.contains( "droppable" ) ) {

@@ -5,7 +5,7 @@
 import { VGTCardGroup } from "../VGTCardGroup.js";
 import { VGTCardTable } from "../VGTCardTable.js";
 import { VGTComponent } from "../VGTComponent.js";
-import { VGTGame } from "./VGTGame.js";
+import { VGTCardGame } from "./VGTCardGame.js";
 import { VGTPlayer } from "../VGTPlayer.js";
 
 
@@ -46,7 +46,7 @@ class VGTGinTable extends VGTCardTable {
 	};
 }
 
-class VGTGin extends VGTGame {
+class VGTGin extends VGTCardGame {
 	constructor ( app ) {
 		super( app, "Gin" );
 
@@ -58,27 +58,12 @@ class VGTGin extends VGTGame {
 			opts : [ "start", "start/end", "end", "modulo" ]
 		};
 
-		this.gameOpts.opts.jokers = {
-			id : "jokers",
-			text : "Jokers",
-			type : "radio",
-			value : 0,
-			opts : [ "removed", "wild" ]
-		};
-
 		this.gameOpts.opts.deal = {
 			id : "deal",
 			text : "Deal",
 			type : "select",
 			value : 0,
 			opts : [ "11 cards", "10 cards" ]
-		};
-
-		this.gameOpts.opts.first = {
-			id : "first",
-			text : "First",
-			type : "player-select",
-			value : 0
 		};
 
 		this.gameOpts.opts.minPlayers.opts = [ 2, 5 ];

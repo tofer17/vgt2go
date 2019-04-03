@@ -72,6 +72,19 @@ class Utils {
 
 		head.appendChild( link );
 	};
+
+	static getClassedParent ( target, className ) {
+		let classed = null;
+		while ( classed == null && target != null ) {
+			if ( target.classList && target.classList.contains( className ) ) {
+				classed = target;
+			} else {
+				target = target.parentNode;
+			}
+		}
+		return classed;
+	};
+
 }
 
 const crud = Utils.Ids();
