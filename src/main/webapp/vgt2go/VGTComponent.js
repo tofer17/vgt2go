@@ -1,6 +1,7 @@
 /**
  *
  */
+import { VGTEvent } from "./VGTEvent.js";
 import { Utils } from "./Utils.js";
 
 class VGTComponent extends EventTarget {
@@ -61,6 +62,20 @@ class VGTComponent extends EventTarget {
 		} else {
 			this._node.appendChild( child );
 		}
+	};
+
+	dispatchEvent ( event, init ) {
+
+		if ( typeof( event ) == "string" ) {
+			console.warn("yay");
+			return super.dispatchEvent( new VGTEvent( event, init ) );
+		}
+
+		if ( !( event instanceof VGTEvent ) ) {
+			console.warn( "Event is not a VGTEvent", event );
+		}
+
+		return super.dispatchEvent( event );
 	};
 
 }

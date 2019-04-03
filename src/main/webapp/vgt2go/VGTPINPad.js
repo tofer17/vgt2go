@@ -2,6 +2,13 @@
  *
  */
 import { VGTComponent } from "./VGTComponent.js";
+import { VGTEvent } from "./VGTEvent.js";
+
+class VGTPINPadEvent extends VGTEvent {
+	constructor ( type ) {
+		super( type );
+	};
+}
 
 class VGTPINPad extends VGTComponent {
 	constructor ( title ) {
@@ -185,7 +192,7 @@ class VGTPINPad extends VGTComponent {
 	setSmall ( small ) {
 		this.small.style.display = small ? "" : "none";
 		this.large.style.display = small ? "none" : "";
-		this.dispatchEvent( new Event( small ? "lower" : "raise" ) );
+		this.dispatchEvent( new VGTPINPadEvent( small ? "lower" : "raise" ) );
 	};
 
 	setTitle ( title ) {
@@ -255,20 +262,20 @@ class VGTPINPad extends VGTComponent {
 			case "pin9" : this.entry += "9"; break;
 			case "pinBS" : this.entry = this.entry.substring( 0, this.entry.length - 1 ); break;
 			//case "pinOK" : this.validPin = null; this.dispatchEvent( new Event( "done" ) );
-			case "pinOK" : this.validPin = null; this.dispatchEvent( new Event( "done" ) );
+			case "pinOK" : this.validPin = null; this.dispatchEvent( new VGTPINPadEvent( "done" ) );
 		};
 
 		if ( e.target.id == "pinPREV" ) {
 			//this.visible = false;
 			this.validPin = null;
-			this.dispatchEvent( new Event( "previous" ) );
+			this.dispatchEvent( new VGTPINPadEvent( "previous" ) );
 			return;
 		}
 
 		if ( e.target.id == "pinNEXT" ) {
 			//this.visible = false;
 			this.validPin = null;
-			this.dispatchEvent( new Event( "next" ) );
+			this.dispatchEvent( new VGTPINPadEvent( "next" ) );
 			return;
 		}
 
@@ -280,4 +287,4 @@ class VGTPINPad extends VGTComponent {
 
 }
 
-export { VGTPINPad };
+export { VGTPINPad, VGTPINPadEvent };

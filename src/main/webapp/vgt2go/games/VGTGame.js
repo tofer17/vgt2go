@@ -7,6 +7,15 @@ import { VGTPlayer } from "../VGTPlayer.js";
 import { VGTStartControls } from "../VGTStartControls.js";
 import { VGTPINPad } from "../VGTPINPad.js";
 import { Utils } from "../Utils.js";
+import { VGTEvent } from "../VGTEvent.js";
+
+class VGTGameEvent extends VGTEvent {
+	constructor( type, change, player ) {
+		super( type );
+		this.addDetail( "change", change );
+		this.addDetail( "player", player );
+	};
+}
 
 class VGTGame extends VGTComponent {
 	constructor ( app, title ) {
@@ -109,7 +118,7 @@ class VGTGame extends VGTComponent {
 		player.visible = this.players.length - 1 == this.currentPlayerIndex;
 		player.addEventListener( "change", this, false );
 
-		this.dispatchEvent( new Event( "player" ) );
+		this.dispatchEvent( new VGTGameEvent( "player", "add", player ) );
 	};
 
 	deletePlayer ( player ) {
@@ -124,7 +133,7 @@ class VGTGame extends VGTComponent {
 		this.playerInfoDiv.removeChild( player.node );
 		this.shiftCurrentPlayer( -1 );
 
-		this.dispatchEvent( new Event( "player" ) );
+		this.dispatchEvent( new VGTGameEvent( "player", "delete", player ) );
 	};
 
 	shiftCurrentPlayer ( dir, allowNew ) {
@@ -191,7 +200,7 @@ class VGTGame extends VGTComponent {
 		} else if ( event.type == "cancel" ) {
 			this.cancelGame();
 		} else if ( event.target instanceof VGTPlayer ) {
-			this.dispatchEvent( new Event( "player" ) );
+			this.dispatchEvent( new VGTGameEvent( "player", "change", event.target ) );
 		} else {
 			console.error( "HTH?!?", event );
 		}
@@ -205,20 +214,17 @@ class VGTGame extends VGTComponent {
 			;
 		} else if ( event.type == "dragstart" ) {
 			this.dragging = event.target;
-// ??		this.dragging.srcPile = this.dragging.card.pile;
 			event.target.style.opacity = 0.5;
 		} else if ( event.type == "dragend" ) {
 			event.target.style.opacity = "";
 		} else if ( event.type == "dragover" ) {
 			event.preventDefault();
 		} else if ( event.type == "dragenter" ) {
-			//this.dropping = getDroppableParent( event.target );
 			this.dropping = Utils.getClassedParent( event.target, "droppable" );
 			if ( this.dropping != null ) {
 				this.dropping.classList.add( this.dragHoverClass );
 			}
 		} else if ( event.type == "dragleave" ) {
-			//this.dropping = getDroppableParent( event.target );
 			this.dropping = Utils.getClassedParent( event.target, "droppable" );
 			if ( this.dropping != null ) {
 				this.dropping.classList.remove( this.dragHoverClass );
@@ -245,4 +251,4 @@ function XgetDroppableParent ( target ) {
 	return dropZone;
 }
 
-export { VGTGame };
+export { VGTGame, VGTGameEvent };

@@ -2,6 +2,13 @@
  *
  */
 import { VGTComponent } from "./VGTComponent.js";
+import { VGTEvent } from "./VGTEvent.js";
+
+class VGTStartControlsEvent extends VGTEvent {
+	constructor ( type ) {
+		super( type );
+	};
+}
 
 class VGTStartControls extends VGTComponent {
 	constructor ( game ) {
@@ -90,16 +97,15 @@ class VGTStartControls extends VGTComponent {
 		let evt = null;
 
 		if ( event.target == this.previousPlayer ) {
-			evt = new Event( "previous" );
+			evt = new VGTStartControlsEvent( "previous" );
 		} else if ( event.target == this.nextPlayer ) {
-			evt = new Event( "next" );
+			evt = new VGTStartControlsEvent( "next" );
 		} else if ( event.target == this.startGame ) {
-			evt = new Event( "start" );
+			evt = new VGTStartControlsEvent( "start" );
 		} else if ( event.target == this.cancelGame ) {
-			evt = new Event( "cancel" );
+			evt = new VGTStartControlsEvent( "cancel" );
 		} else if ( event.target == this.deletePlayer ) {
-			console.log("ggg");
-			evt = new Event( "delete" );
+			evt = new VGTStartControlsEvent( "delete" );
 		}
 
 		if ( evt != null ) {
@@ -108,4 +114,4 @@ class VGTStartControls extends VGTComponent {
 	}
 }
 
-export { VGTStartControls };
+export { VGTStartControls, VGTStartControlsEvent };

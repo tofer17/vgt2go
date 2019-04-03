@@ -3,6 +3,14 @@
  */
 import { VGTComponent } from "./VGTComponent.js";
 import { VGTPINPad } from "./VGTPINPad.js";
+import { VGTEvent } from "./VGTEvent.js";
+
+
+class VGTPlayerEvent extends VGTEvent {
+	constructor ( type ) {
+		super( type );
+	};
+}
 
 class VGTAvatarMaker extends VGTComponent {
 	constructor () {
@@ -130,9 +138,10 @@ class VGTPlayer extends VGTComponent {
 		this.update();
 
 		if ( event.target != this.game && event.type != "raise" && event.type != "lower" ) {
-			this.dispatchEvent( new Event( "change" ) );
+			this.dispatchEvent( new VGTPlayerEvent( "change" ) );
 		}
 	};
 }
 
-export { VGTPlayer };
+
+export { VGTPlayer, VGTPlayerEvent };

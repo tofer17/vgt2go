@@ -3,8 +3,17 @@
  */
 import { VGTComponent  } from "./VGTComponent.js";
 import { VGTCard } from "./VGTCard.js";
+import { VGTEvent } from "./VGTEvent.js";
 
 const _TYPES = { FaceDown : "FD", RTL : "RTL", FaceUp : "FU" };
+
+class VGTCardGroupEvent extends VGTEvent {
+	constructor ( type, src ) {
+		super( type );
+		Object.defineProperty( this, "targetCard", { value : src.target } );
+		this.addDetail( "srcEvent", src );
+	};
+}
 
 class VGTCardGroup extends VGTComponent {
 	constructor ( id, type, ...cards ) {
@@ -148,9 +157,10 @@ class VGTCardGroup extends VGTComponent {
 
 	handleEvent ( event ) {
 		if ( event.type == "click" && this.canClick ) {
-			const evt =  new Event( "click" );
-			evt.targetCard = event.target;
-			this.dispatchEvent( evt );
+			//const evt =  new Event( "click" );
+			//evt.targetCard = event.target;
+			//this.dispatchEvent( evt );
+			this.dispatchEvent( new VGTCardGroupEvent( "click", event ) );
 		}
 	};
 
@@ -270,4 +280,4 @@ class VGTCardGroup extends VGTComponent {
 	};
 }
 
-export { VGTCardGroup };
+export { VGTCardGroup, VGTCardGroupEvent };

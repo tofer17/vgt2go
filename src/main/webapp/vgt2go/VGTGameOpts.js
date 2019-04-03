@@ -3,6 +3,14 @@
  */
 
 import { VGTComponent } from "./VGTComponent.js";
+import { VGTEvent } from "./VGTEvent.js";
+
+class VGTGameOptsEvent extends VGTEvent {
+	constructor ( type, opt ) {
+		super( type );
+		Object.defineProperty( this, "gameOpt", { value : opt } );
+	};
+}
 
 class VGTGameOpts extends VGTComponent {
 	constructor ( game ) {
@@ -184,28 +192,17 @@ class VGTGameOpts extends VGTComponent {
 				}
 
 			}
-		};
-
-//		const seatingNode = this.opts.seating.node;
-//
-//		let n = seatingNode.firstChild;
-//		while ( n.nextSibling ) {
-//			seatingNode.removeChild( n.nextSibling );
-//		}
-//
-//		for ( let player of this.game.getPlayers() ) {
-//			this.opts.seating.node.appendChild( document.createTextNode( player.name + " " ) );
-//		}
-
+		}
 	};
 
 	handleEvent ( event ) {
 
 		if ( event.target != this.game ) {
 			event.target.gameOpt.value = event.target.value;
-			const evt = new Event( "change" );
-			evt.gameOpt = event.target.gameOpt;
-			this.dispatchEvent( evt );
+			//const evt = new Event( "change" );
+			//evt.gameOpt = event.target.gameOpt;
+			//this.dispatchEvent( evt );
+			this.dispatchEvent( new VGTGameOptsEvent( "change", event.target.gameOpt ) );
 		}
 
 		this.update();
@@ -213,4 +210,4 @@ class VGTGameOpts extends VGTComponent {
 }
 
 
-export { VGTGameOpts };
+export { VGTGameOpts, VGTGameOptsEvent };

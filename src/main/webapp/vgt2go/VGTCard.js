@@ -2,6 +2,13 @@
  *
  */
 import { VGTComponent } from "./VGTComponent.js";
+import { VGTEvent } from "./VGTEvent.js";
+
+class VGTCardEvent extends VGTEvent {
+	constructor ( type ) {
+		super( type );
+	};
+}
 
 class VGTCardBase extends Object {
 	constructor ( id, name, order ) {
@@ -179,9 +186,9 @@ class VGTCard extends VGTComponent {
 		event.preventDefault();
 
 		if ( event.type == "click" && this.canClick ) {
-			this.dispatchEvent( new Event( "click" ) );
+			this.dispatchEvent( new VGTCardEvent( "click" ).addDetail( "srcEvent", event ) );
 		}
-	}
+	};
 
 	static get STANDARD_SUITS () {
 		return STANDARD_SUITS;
@@ -253,4 +260,4 @@ function debugCard ( debug, card ) {
 const GlobalVGTCard = {};
 window.vgt.GlobalVGTCard = GlobalVGTCard;
 
-export { VGTCard };
+export { VGTCard, VGTCardEvent };

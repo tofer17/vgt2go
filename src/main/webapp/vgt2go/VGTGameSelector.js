@@ -3,6 +3,7 @@
  */
 import { VGTComponent } from "./VGTComponent.js";
 import { AVAILABLE_GAMES } from "./games/Available.js";
+import { VGTEvent } from "./VGTEvent.js";
 
 /*
  * Displays:
@@ -13,6 +14,14 @@ import { AVAILABLE_GAMES } from "./games/Available.js";
  *   o New...
 
  */
+
+class VGTGameSelectorEvent extends VGTEvent {
+	constructor ( type, game ) {
+		super( type, { detail : game } );
+		Object.defineProperty( this, "game", { value : game } );
+	};
+}
+
 class VGTGameSelector extends VGTComponent {
 	constructor () {
 		super( "div", "vgtgameselector" );
@@ -56,12 +65,10 @@ class VGTGameSelector extends VGTComponent {
 		let evt = null;
 
 		if ( event.target.newGame ) {
-			evt = new Event( "newgame" );
-			evt.game = event.target.newGame;
+			evt = new VGTGameSelectorEvent( "newgame", event.target.newGame );
 			this.selectedGame = event.target.newGame;
 		} else if ( event.target.resumeGame ) {
-			evt = new Event( "resumegame" );
-			evt.game = event.target.resumeGame;
+			evt = new VGTGameSelectorEvent( "resumegame", event.target.resumeGame );
 			this.selectedGame = event.target.resumeGame;
 		}
 
@@ -71,4 +78,4 @@ class VGTGameSelector extends VGTComponent {
 	};
 }
 
-export { VGTGameSelector };
+export { VGTGameSelector, VGTGameSelectorEvent };
