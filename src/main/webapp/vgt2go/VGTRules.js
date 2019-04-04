@@ -108,11 +108,6 @@ class VGTRule extends VGTComponent {
 		this.valueNode.disabled = !enabled;
 	};
 
-	withEnabled ( enabled ) {
-		this.valueNode.disabled = !enabled;
-		return this;
-	};
-
 	/* [ TITLE ] [ ....... ] */
 	init () {
 		super.init();
