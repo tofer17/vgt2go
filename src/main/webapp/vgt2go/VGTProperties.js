@@ -6,7 +6,7 @@ import { VGTComponent } from "./VGTComponent.js";
 import { VGTEvent } from "./VGTEvent.js";
 
 
-class VGTRuleEvent extends VGTEvent {
+class VGTPropertyEvent extends VGTEvent {
 	constructor ( type, field, oldValue, newValue ) {
 		super( type );
 		this.addDetail( "field", field );
@@ -16,10 +16,10 @@ class VGTRuleEvent extends VGTEvent {
 }
 
 
-class VGTRule extends VGTComponent {
+class VGTProperty extends VGTComponent {
 	constructor ( id, type, value ) {
-		super( "div", id, "vgtrule" );
-		this.constructor.css = "VGTRule";
+		super( "div", id, "vgtproperty" );
+		this.constructor.css = "VGTProperty";
 
 		Object.defineProperty( this, "id", { value : id } );
 		Object.defineProperty( this, "type", { value : type } );
@@ -67,7 +67,7 @@ class VGTRule extends VGTComponent {
 	set value ( newValue ) {
 		const oldValue = this._value;
 		this._value = newValue;
-		this.dispatchEvent( new VGTRuleEvent( "change", "value", oldValue, newValue ) );
+		this.dispatchEvent( new VGTPropertyEvent( "change", "value", oldValue, newValue ) );
 	};
 
 	withValue ( value ) {
@@ -112,8 +112,8 @@ class VGTRule extends VGTComponent {
 	init () {
 		super.init();
 
-		this.titleDiv.classList.add( "vgtruletitle" );
-		this.valueDiv.classList.add( "vgtrulevalue" );
+		this.titleDiv.classList.add( "vgtproptitle" );
+		this.valueDiv.classList.add( "vgtpropvalue" );
 
 		this.titleDiv.htmlFor = this.valueNode.id;
 		this.valueDiv.appendChild( this.valueNode );
@@ -131,13 +131,13 @@ class VGTRule extends VGTComponent {
 
 	static makeNewRule ( type, id, value ) {
 		if ( type == "number" ) {
-			return new VGTRuleNumber( id, value );
+			return new VGTPropertyNumber( id, value );
 		} else if ( type == "select" ) {
-			return new VGTRuleSelect( id, value );
+			return new VGTPropertySelect( id, value );
 		} else if ( type == "radio" ) {
-			return new VGTRuleRadio( id, value );
+			return new VGTPropertyRadio( id, value );
 		} else if ( type == "player-select" ) {
-			return new VGTRulePlayerSelect( id, value );
+			return new VGTPropertyPlayerSelect( id, value );
 		} else {
 			throw "Don't know that type: '" + type + "'.";
 		}
@@ -146,7 +146,7 @@ class VGTRule extends VGTComponent {
 }
 
 
-class VGTRuleNumber extends VGTRule {
+class VGTPropertyNumber extends VGTProperty {
 	constructor ( id, value ) {
 		super( id, "number", value );
 	};
@@ -154,8 +154,8 @@ class VGTRuleNumber extends VGTRule {
 	init () {
 
 		this.valueNode = document.createElement( "input" );
-		this.valueNode.id = "vgtrulenumber-" + this._hashCode;
-		this.valueNode.classList.add( "vgtrulenumber" );
+		this.valueNode.id = "vgtpropnumber-" + this._hashCode;
+		this.valueNode.classList.add( "vgtpropnumber" );
 		this.valueNode.type = "number";
 
 		this.valueNode.addEventListener( "keyup", this, false );
@@ -176,7 +176,7 @@ class VGTRuleNumber extends VGTRule {
 }
 
 
-class VGTRuleSelect extends VGTRule {
+class VGTPropertySelect extends VGTProperty {
 	constructor( id, value ) {
 		super( id, "select", value );
 	};
@@ -184,8 +184,8 @@ class VGTRuleSelect extends VGTRule {
 	init () {
 
 		this.valueNode = document.createElement( "select" );
-		this.valueNode.id = "vgtruleselect-" + this._hashCode;
-		this.valueNode.classList.add( "vgtruleselect" );
+		this.valueNode.id = "vgtpropselect-" + this._hashCode;
+		this.valueNode.classList.add( "vgtpropselect" );
 
 		for ( let i = 0; i < this.opts.length; i++ ) {
 			const option = document.createElement("option");
@@ -205,7 +205,7 @@ class VGTRuleSelect extends VGTRule {
 }
 
 
-class VGTRuleRadio extends VGTRule {
+class VGTPropertyRadio extends VGTProperty {
 	constructor( id, value ) {
 		super( id, "radio", value );
 	};
@@ -273,7 +273,7 @@ class VGTRuleRadio extends VGTRule {
 }
 
 
-class VGTRulePlayerSelect extends VGTRule {
+class VGTPropertyPlayerSelect extends VGTProperty {
 	constructor ( id, value ) {
 		super( id, "player-select", value );
 		this.game = null;
@@ -393,7 +393,7 @@ class VGTRulePlayerSelect extends VGTRule {
 
 			players.splice( to, 0, players.splice( from, 1 )[ 0 ] );
 
-			this.dispatchEvent( new VGTRuleEvent( "change", "options", oldValue, players ) );
+			this.dispatchEvent( new VGTPropertyEvent( "change", "options", oldValue, players ) );
 
 			this.update();
 		}
@@ -430,9 +430,9 @@ class VGTRulePlayerSelect extends VGTRule {
 }
 
 
-class VGTRules extends VGTComponent {
+class VGTProperties extends VGTComponent {
 	constructor () {
-		super( "div", null, "vgtgamerules" );
+		super( "div", null, "vgtproperties" );
 
 		this.rules = {};
 	};
@@ -470,43 +470,52 @@ class VGTRules extends VGTComponent {
 }
 
 
-class VGTGameRules extends VGTRules {
+class VGTAppProperties extends VGTProperties {
+	constructor ( app ) {
+		super();
+
+		this.app = app;
+	};
+}
+
+
+class VGTGameProperties extends VGTProperties {
 	constructor ( game ) {
 		super();
 
 		this.game = game;
 
-		this.rules.minPlayers = new VGTRuleNumber( "minplayers" )
+		this.rules.minPlayers = new VGTPropertyNumber( "minplayers" )
 			.withTitle( "Minimum Players" )
 			.withText( "Minimum players can be set between 2 and 5." )
 			.withValue( 2 )
 			.withOpts( 2, 5, 1 );
 
-		this.rules.maxPlayers = new VGTRuleNumber( "maxplayers" )
+		this.rules.maxPlayers = new VGTPropertyNumber( "maxplayers" )
 			.withTitle( "Maximum Players" )
 			.withText( "Maximum players can be set between 2 and 5." )
 			.withValue( 2 )
 			.withOpts( 2, 5, 1 );
 
-		this.rules.selTest = new VGTRuleSelect( "seltest" )
+		this.rules.selTest = new VGTPropertySelect( "seltest" )
 			.withTitle( "Selct Test" )
 			.withText( "Helpful select test text." )
 			.withValue( 1 )
 			.withOpts( [ "Item 0", "Item 1", "Item 2", "Item 3" ] );
 
-		this.rules.radTest = new VGTRuleRadio ( "radtest" )
+		this.rules.radTest = new VGTPropertyRadio ( "radtest" )
 			.withTitle( "Radio Test" )
 			.withText( "Less helpful radio input text." )
 			.withValue( 0 )
 			.withOpts( [ "First Option", "Second Option", "Third Option" ] );
 
-		this.rules.playerTest1 = new VGTRulePlayerSelect ( "playerTest1" )
+		this.rules.playerTest1 = new VGTPropertyPlayerSelect ( "playerTest1" )
 			.withTitle( "Select Player 1" )
 			.withText( "Selects a player-- order too??" )
 			.withValue( game.currentPlayerIndex )
 			.withGame( game );
 
-		this.rules.playerTest2 = new VGTRulePlayerSelect ( "playerTest2" )
+		this.rules.playerTest2 = new VGTPropertyPlayerSelect ( "playerTest2" )
 			.withTitle( "Select Player 2" )
 			.withText( "Selects a player-- order too??" )
 			.withValue( game.currentPlayerIndex )
@@ -518,4 +527,14 @@ class VGTGameRules extends VGTRules {
 }
 
 
-export { VGTRuleNumber, VGTRuleSelect, VGTRuleRadio, VGTRules, VGTGameRules };
+class VGTPlayerProperties extends VGTProperties {
+	constructor ( player ) {
+		super();
+
+		this.player = player;
+	};
+}
+
+
+//export { VGTPropertyNumber, VGTPropertySelect, VGTPropertyRadio, VGTProperties, VGTGameProperties };
+export { VGTProperty, VGTAppProperties, VGTGameProperties, VGTPlayerProperties };
