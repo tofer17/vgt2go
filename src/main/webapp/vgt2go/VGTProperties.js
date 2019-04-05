@@ -143,6 +143,8 @@ class VGTProperty extends VGTComponent {
 			return new VGTPropertySelect( id, value );
 		} else if ( type == "radio" ) {
 			return new VGTPropertyRadio( id, value );
+		} else if ( type == "boolean" ) {
+			return new VGTPropertyBoolean( id, value );
 		} else if ( type == "player-select" ) {
 			return new VGTPropertyPlayerSelect( id, value );
 		} else {
@@ -220,6 +222,7 @@ class VGTPropertyRadio extends VGTProperty {
 	};
 
 	init () {
+
 		this.valueNode = document.createElement( "div" );
 		Object.defineProperty( this.valueNode, "disabled", {
 
@@ -279,6 +282,57 @@ class VGTPropertyRadio extends VGTProperty {
 			rad.checked = this.value == rad.value;
 		}
 	};
+}
+
+
+class VGTPropertyBoolean extends VGTProperty {
+	constructor ( id, value ) {
+		super( id, "boolean", value );
+	};
+
+	init () {
+
+		this.valueNode = document.createElement( "div" );
+
+		Object.defineProperty( this.valueNode, "disabled", {
+
+			get : function () {
+				return this.querySelector( "input" ).disabled;
+			},
+
+			set : function ( disabled ) {
+				this.querySelector( "input" ).disabled = disabled;
+			}
+		});
+
+		Object.defineProperty( this.valueNode, "value", {
+			get : function () {
+				return this.querySelector( "input" ).checked ? 1 : 0
+			},
+
+			set : function ( value ) {
+				this.querySelector( "input" ).checked = value ? true : false;			}
+		});
+
+		const cb = document.createElement( "input" );
+		cb.id = this.id + "cb";
+		cb.type = "checkbox";
+		cb.checked = this.value ? true : false;
+		cb.addEventListener( "change", this, false );
+		this.valueNode.appendChild( cb );
+
+		const label = document.createElement( "label" );
+		label.htmlFor = this.id + "cb";
+		label.innerHTML = this.opts[0];
+		this.valueNode.appendChild( label );
+
+		super.init();
+	};
+
+	update () {
+		this.valueNode.querySelector( "input" ).checked = this.value ? true : false;
+	};
+
 }
 
 
@@ -522,17 +576,23 @@ class VGTGameProperties extends VGTProperties {
 			.withValue( 2 )
 			.withOpts( 2, 5, 1 );
 
-//		this.rules.selTest = new VGTPropertySelect( "seltest" )
-//			.withTitle( "Selct Test" )
-//			.withText( "Helpful select test text." )
-//			.withValue( 1 )
-//			.withOpts( [ "Item 0", "Item 1", "Item 2", "Item 3" ] );
+		this.rules.selTest = new VGTPropertySelect( "seltest" )
+			.withTitle( "Selct Test" )
+			.withText( "Helpful select test text." )
+			.withValue( 1 )
+			.withOpts( [ "Item 0", "Item 1", "Item 2", "Item 3" ] );
 //
 //		this.rules.radTest = new VGTPropertyRadio ( "radtest" )
 //			.withTitle( "Radio Test" )
 //			.withText( "Less helpful radio input text." )
 //			.withValue( 0 )
 //			.withOpts( [ "First Option", "Second Option", "Third Option" ] );
+//
+//		this.rules.boolTest = new VGTPropertyBoolean( "booltest" )
+//			.withTitle( "Reshuffle" )
+//			.withText( "Turn over first card after reshuffle." )
+//			.withValue( 1 )
+//			.withOpts( [ "Turn over first card after reshuffle" ] );
 //
 //		this.rules.playerTest1 = new VGTPropertyPlayerSelect ( "playerTest1" )
 //			.withTitle( "Select Player 1" )
