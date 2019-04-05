@@ -2,7 +2,8 @@
  *
  */
 import { VGTComponent } from "../VGTComponent.js";
-import { VGTGameOpts } from "../VGTGameOpts.js";
+//import { VGTGameOpts } from "../VGTGameOpts.js";
+import { VGTGameProperties } from "../VGTProperties.js";
 import { VGTPlayer } from "../VGTPlayer.js";
 import { VGTStartControls } from "../VGTStartControls.js";
 import { VGTPINPad } from "../VGTPINPad.js";
@@ -29,7 +30,8 @@ class VGTGame extends VGTComponent {
 
 		this.playerInfoDiv = null;
 
-		this.gameOpts = new VGTGameOpts( this );
+		//this.gameOpts = new VGTGameOpts( this );
+		this.gameProps = new VGTGameProperties( this );
 
 		this.startControls = new VGTStartControls( this );
 
@@ -40,12 +42,12 @@ class VGTGame extends VGTComponent {
 		this.dragging = null;
 		this.dropping = null;
 
-		this.gameOpts.opts.first = {
-			id : "first",
-			text : "First",
-			type : "player-select",
-			value : 0
-		};
+//		this.gameOpts.opts.first = {
+//			id : "first",
+//			text : "First",
+//			type : "player-select",
+//			value : 0
+//		};
 
 		this.dragHoverClass = "dragHover";
 	};
@@ -66,13 +68,16 @@ class VGTGame extends VGTComponent {
 
 		this.playerInfoDiv = document.createElement( "div" );
 
-		this.node.appendChild( this.playerInfoDiv );
-		this.node.appendChild( this.gameOpts.node );
-		this.node.appendChild( this.startControls.node );
+		this.appendChild( this.playerInfoDiv );
+		this.appendChild( this.gameProps );
+		this.appendChild( this.startControls );
 
-		this.node.appendChild( this.pinPad.node );
+		this.appendChild( this.pinPad );
 
-		this.gameOpts.addEventListener( "change", this, false );
+		this.tableDiv = document.createElement( "div" );
+		this.appendChild( this.tableDiv );
+
+		this.gameProps.addEventListener( "change", this, false );
 
 		this.startControls.addEventListener( "previous", this, false );
 		this.startControls.addEventListener( "next", this, false );
@@ -84,13 +89,21 @@ class VGTGame extends VGTComponent {
 		this.pinPad.addEventListener( "previous", this, false );
 		this.pinPad.addEventListener( "next", this, false );
 
-		document.addEventListener ( "drag", this, false );
-		document.addEventListener( "dragstart", this, false );
-		document.addEventListener( "dragend", this, false );
-		document.addEventListener( "dragover", this, false );
-		document.addEventListener( "dragenter", this, false );
-		document.addEventListener( "dragleave", this, false );
-		document.addEventListener( "drop", this, false );
+//		document.addEventListener ( "drag", this, false );
+//		document.addEventListener( "dragstart", this, false );
+//		document.addEventListener( "dragend", this, false );
+//		document.addEventListener( "dragover", this, false );
+//		document.addEventListener( "dragenter", this, false );
+//		document.addEventListener( "dragleave", this, false );
+//		document.addEventListener( "drop", this, false );
+
+		this.tableDiv.addEventListener ( "drag", this, false );
+		this.tableDiv.addEventListener( "dragstart", this, false );
+		this.tableDiv.addEventListener( "dragend", this, false );
+		this.tableDiv.addEventListener( "dragover", this, false );
+		this.tableDiv.addEventListener( "dragenter", this, false );
+		this.tableDiv.addEventListener( "dragleave", this, false );
+		this.tableDiv.addEventListener( "drop", this, false );
 	};
 
 	getPlayers () {
@@ -106,7 +119,7 @@ class VGTGame extends VGTComponent {
 	start () {
 		this.pinPad.setControlsVisible( false );
 		this.currentPlayer.visible = false;
-		this.gameOpts.visible = false;
+		this.gameProps.visible = false;
 		this.startControls.visible = false;
 
 		this.stage = 1;
@@ -144,18 +157,18 @@ class VGTGame extends VGTComponent {
 		}
 
 		this.pinPad.visible = false;
-		this.gameOpts.visible = false;
+		this.gameProps.visible = false;
 		this.startControls.visible = false;
 
 		this.currentPlayerIndex += dir;
 
 		if ( this.currentPlayerIndex < 0 ) {
 			this.currentPlayerIndex = this.players.length - 1;
-		} else if ( allowNew && this.currentPlayerIndex >= this.players.length && this.currentPlayerIndex <= this.gameOpts.opts.maxPlayers.value ) {
+		} else if ( allowNew && this.currentPlayerIndex >= this.players.length && this.currentPlayerIndex <= this.gameProps.rules.maxPlayers.value ) {
 			this.addPlayer( new VGTPlayer( this, "", "" ) );
 		} else if ( !allowNew && this.currentPlayerIndex >= this.players.length ) {
 			this.currentPlayerIndex = 0;
-		} else if ( this.currentPlayerIndex > this.gameOpts.opts.maxPlayers.value ) {
+		} else if ( this.currentPlayerIndex > this.gameProps.rules.maxPlayers.value ) {
 			this.currentPlayerIndex = 0;
 		}
 
@@ -169,8 +182,8 @@ class VGTGame extends VGTComponent {
 			if ( this.stage == 0 ) {
 
 				this.currentPlayer.visible = true;
-				this.gameOpts.visible = true;
-				this.gameOpts.enabled = this.currentPlayerIndex == 0;
+				this.gameProps.visible = true;
+				this.gameProps.enabled = this.currentPlayerIndex == 0;
 				this.startControls.visible = true;
 			}
 		}
@@ -206,7 +219,7 @@ class VGTGame extends VGTComponent {
 		}
 
 		this.startControls.update();
-		this.gameOpts.enabled = this.currentPlayerIndex == 0;
+		this.gameProps.enabled = this.currentPlayerIndex == 0;
 	};
 
 	handleDragEvent ( event ) {
@@ -237,18 +250,6 @@ class VGTGame extends VGTComponent {
 		}
 	};
 
-}
-
-function XgetDroppableParent ( target ) {
-	let dropZone = null;
-	while ( dropZone == null && target != null ) {
-		if ( target.classList && target.classList.contains( "droppable" ) ) {
-			dropZone = target;
-		} else {
-			target = target.parentNode;
-		}
-	}
-	return dropZone;
 }
 
 export { VGTGame, VGTGameEvent };

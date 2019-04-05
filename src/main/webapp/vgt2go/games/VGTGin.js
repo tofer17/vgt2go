@@ -6,6 +6,7 @@ import { VGTCardGroup } from "../VGTCardGroup.js";
 import { VGTCardTable } from "../VGTCardTable.js";
 import { VGTComponent } from "../VGTComponent.js";
 import { VGTCardGame } from "./VGTCardGame.js";
+import { VGTProperty } from "../VGTProperties.js";
 import { VGTPlayer } from "../VGTPlayer.js";
 
 
@@ -50,32 +51,45 @@ class VGTGin extends VGTCardGame {
 	constructor ( app ) {
 		super( app, "Gin" );
 
-		this.gameOpts.opts.ace = {
-			id : "aces",
-			text : "Aces",
-			type : "select",
-			value : 1,
-			opts : [ "start", "start/end", "end", "modulo" ]
-		};
+//		this.gameProps.rules.ace = {
+//			id : "aces",
+//			text : "Aces",
+//			type : "select",
+//			value : 1,
+//			opts : [ "start", "start/end", "end", "modulo" ]
+//		};
 
-		this.gameOpts.opts.deal = {
-			id : "deal",
-			text : "Deal",
-			type : "select",
-			value : 0,
-			opts : [ "11 cards", "10 cards" ]
-		};
+		this.gameProps.rules.ace = VGTProperty.make( "select", "ace" )
+			.withSort( 21 )
+			.withTitle( "Aces" )
+			.withValue( 1 )
+			.withOpts( [ "start", "start/end", "end", "modulo" ] );
 
-		this.gameOpts.opts.minPlayers.opts = [ 2, 5 ];
-		this.gameOpts.opts.minPlayers.value = 2;
+//		this.gameProps.rules.deal = {
+//			id : "deal",
+//			text : "Deal",
+//			type : "select",
+//			value : 0,
+//			opts : [ "11 cards", "10 cards" ]
+//		};
 
-		this.gameOpts.opts.maxPlayers.opts = [ 2, 5 ];
-		this.gameOpts.opts.maxPlayers.value = 5;
+		this.gameProps.rules.deal = VGTProperty.make( "select", "deal" )
+			.withSort( 20 )
+			.withTitle( "Deal" )
+			.withValue( 1 )
+			.withOpts( [ "10 cards", "11 cards" ] );
+
+		this.gameProps.rules.minPlayers.opts = [ 2, 5 ];
+		this.gameProps.rules.minPlayers.value = 2;
+
+		this.gameProps.rules.maxPlayers.opts = [ 2, 5 ];
+		this.gameProps.rules.maxPlayers.value = 5;
 
 		this.deck = null;
 		this.discards = null;
 		this.table = null;
 		this.ginButton = null;
+
 	};
 
 	init () {
@@ -94,11 +108,11 @@ class VGTGin extends VGTCardGame {
 		this.ginButton.disabled = true;
 		this.ginButton.style.display = "none";
 
-		this.appendChild( this.table );
-		this.appendChild( this.ginButton );
+		this.tableDiv.appendChild( this.table.node );
+		this.tableDiv.appendChild( this.ginButton );
 
-		this.gameOpts.opts.minPlayers.visible = false;
-		this.gameOpts.opts.maxPlayers.visible = false;
+		this.gameProps.rules.minPlayers.visible = false;
+		this.gameProps.rules.maxPlayers.visible = false;
 
 		this.table.visible = false;
 
@@ -117,7 +131,7 @@ class VGTGin extends VGTCardGame {
 		super.start();
 		console.log("START!");
 
-		if ( this.gameOpts.opts.jokers.value == 0 ) {
+		if ( this.gameProps.rules.jokers.value == 0 ) {
 			this.deck.removeJokers();
 		}
 
@@ -134,7 +148,7 @@ class VGTGin extends VGTCardGame {
 			player.hand.addEventListener( "click", this, false );
 		}
 
-		if ( this.gameOpts.opts.deal.value == 0 ) {
+		if ( this.gameProps.rules.deal.value == 1 ) {
 			this.currentPlayer.hand.add( this.deck.deal( 1 ) );
 			this.currentPlayer.hand.turnAllFaceUp( true );
 			this.currentPlayer.hand.update();
@@ -174,9 +188,9 @@ class VGTGin extends VGTCardGame {
 		const m1 = [ cards[3], cards[4], cards[5] ];
 		const m2 = [ cards[6], cards[7], cards[8], cards[9] ];
 
-		const im0 = checkMeld( m0, this.gameOpts.opts.ace.value );
-		const im1 = checkMeld( m1, this.gameOpts.opts.ace.value );
-		const im2 = checkMeld( m2, this.gameOpts.opts.ace.value );
+		const im0 = checkMeld( m0, this.gameProps.rules.ace.value );
+		const im1 = checkMeld( m1, this.gameProps.rules.ace.value );
+		const im2 = checkMeld( m2, this.gameProps.rules.ace.value );
 
 		console.log(   "m0:[" + m0 + "]=>" + im0 +
 					 ", m1:[" + m1 + "]=>" + im1 +

@@ -24,6 +24,8 @@ class VGTProperty extends VGTComponent {
 		Object.defineProperty( this, "id", { value : id } );
 		Object.defineProperty( this, "type", { value : type } );
 
+		this.sort = -1;
+
 		this._value = value;
 		this.valueNode = null;
 
@@ -100,6 +102,11 @@ class VGTProperty extends VGTComponent {
 		return this.withOpts( ...opts );
 	};
 
+	withSort ( sort ) {
+		this.sort = sort;
+		return this;
+	};
+
 	get enabled () {
 		return !this.valueNode.disabled;
 	};
@@ -129,7 +136,7 @@ class VGTProperty extends VGTComponent {
 		this.value = parseInt( this.valueNode.value );
 	};
 
-	static makeNewRule ( type, id, value ) {
+	static make ( type, id, value ) {
 		if ( type == "number" ) {
 			return new VGTPropertyNumber( id, value );
 		} else if ( type == "select" ) {
@@ -193,6 +200,8 @@ class VGTPropertySelect extends VGTProperty {
 			option.value = i;
 			this.valueNode.appendChild( option );
 		}
+
+		this.valueNode.selectedIndex = this._value;
 
 		this.valueDiv.addEventListener( "change", this, false );
 
@@ -320,7 +329,7 @@ class VGTPropertyPlayerSelect extends VGTProperty {
 				const btns = this.querySelectorAll( "button" );
 				for ( let i = 0; i < btns.length; i++ ) {
 					const btn = btns[i];
-					if ( btn.classList.contains( "buf" ) ) {
+					if ( btn.classList.contains( "down" ) ) {
 						return i;
 					}
 				}
@@ -331,12 +340,12 @@ class VGTPropertyPlayerSelect extends VGTProperty {
 				console.log(value);
 				for ( let i = 0; i < btns.length; i++ ) {
 					//rads[i].checked = rads[i].value == this.value;
-					btns[i].classList.toggle( "buf", i == this.value );
+					btns[i].classList.toggle( "down", i == this.value );
 				}
 			}
 		});
 
-		if ( 1==2||this.draggable ) {
+		if ( this.draggable ) {
 			this.valueNode.addEventListener( "drag", this, false );
 			this.valueNode.addEventListener( "dragstart", this, false );
 			this.valueNode.addEventListener( "dragend", this, false );
@@ -370,12 +379,14 @@ class VGTPropertyPlayerSelect extends VGTProperty {
 		} else if ( event.type == "dragenter" ) {
 			this.dropping = event.target.parentElement == this.valueNode && event.target.classList.contains( "droppable" ) ? event.target : null;
 			if ( this.dropping != null ) {
-				this.dropping.style.background = "#a44";
+				//this.dropping.style.background = "#a44";
+				this.dropping.classList.add( "dragover" );
 			}
 		} else if ( event.type == "dragleave" ) {
 			this.dropping = event.target.parentElement == this.valueNode && event.target.classList.contains( "droppable" ) ? event.target : null;
 			if ( this.dropping != null ) {
-				this.dropping.style.background = "";
+				//this.dropping.style.background = "";
+				this.dropping.classList.remove( "dragover" );
 			}
 		} else if ( event.type == "drop" ) {
 			event.preventDefault();
@@ -383,7 +394,8 @@ class VGTPropertyPlayerSelect extends VGTProperty {
 			if ( this.dropping == null ) {
 				return;
 			}
-			this.dropping.style.background = "";
+			//this.dropping.style.background = "";
+			this.dropping.classList.remove( "dragover" );
 
 			const players = this.game.players;
 			const oldValue = players.slice();
@@ -406,20 +418,21 @@ class VGTPropertyPlayerSelect extends VGTProperty {
 
 			const p = players[i];
 			const btn = document.createElement( "button" );
+			btn.classList.add( "vgtpropertyplayerselect")
 
 			btn.innerHTML = p.name;
 			btn.playerIndex = i;
 			if ( this.draggable ) {
 				btn.classList.add( "droppable" );
 			}
-			btn.classList.toggle( "buf", ( this.value == i ) );
+			btn.classList.toggle( "down", ( this.value == i || ( this.game.currentPlayerIndex == -1 && i == 0 )  ) );
 			btn.draggable = this.draggable;
 
 			btn.addEventListener( "click", (e)=>{
 				e.stopPropagation();
 				const sibs = e.target.parentElement.querySelectorAll( "button" );
 				for ( let i = 0; i < sibs.length; i++ ) {
-					sibs[i].classList.toggle( "buf", ( e.target.playerIndex == i ) );
+					sibs[i].classList.toggle( "down", ( e.target.playerIndex == i ) );
 				}
 				this.value = e.target.playerIndex;
 			}, false );
@@ -439,9 +452,19 @@ class VGTProperties extends VGTComponent {
 
 	init () {
 		super.init();
+		const arr = [];
 
 		for ( let ruleKey in this.rules ) {
-			this.appendChild( this.rules[ ruleKey ] );
+			//this.appendChild( this.rules[ ruleKey ] );
+			arr.push( this.rules[ ruleKey ] );
+		}
+
+		arr.sort( ( o1, o2 ) => {
+			return o1.sort == o2.sort ? 0 : ( o1.sort > o2.sort ? 1 : -1 );
+		});
+
+		for ( let rule of arr ) {
+			this.appendChild( rule );
 		}
 	};
 
@@ -486,39 +509,49 @@ class VGTGameProperties extends VGTProperties {
 		this.game = game;
 
 		this.rules.minPlayers = new VGTPropertyNumber( "minplayers" )
+			.withSort( 1 )
 			.withTitle( "Minimum Players" )
 			.withText( "Minimum players can be set between 2 and 5." )
 			.withValue( 2 )
 			.withOpts( 2, 5, 1 );
 
 		this.rules.maxPlayers = new VGTPropertyNumber( "maxplayers" )
+			.withSort( 2 )
 			.withTitle( "Maximum Players" )
 			.withText( "Maximum players can be set between 2 and 5." )
 			.withValue( 2 )
 			.withOpts( 2, 5, 1 );
 
-		this.rules.selTest = new VGTPropertySelect( "seltest" )
-			.withTitle( "Selct Test" )
-			.withText( "Helpful select test text." )
-			.withValue( 1 )
-			.withOpts( [ "Item 0", "Item 1", "Item 2", "Item 3" ] );
+//		this.rules.selTest = new VGTPropertySelect( "seltest" )
+//			.withTitle( "Selct Test" )
+//			.withText( "Helpful select test text." )
+//			.withValue( 1 )
+//			.withOpts( [ "Item 0", "Item 1", "Item 2", "Item 3" ] );
+//
+//		this.rules.radTest = new VGTPropertyRadio ( "radtest" )
+//			.withTitle( "Radio Test" )
+//			.withText( "Less helpful radio input text." )
+//			.withValue( 0 )
+//			.withOpts( [ "First Option", "Second Option", "Third Option" ] );
+//
+//		this.rules.playerTest1 = new VGTPropertyPlayerSelect ( "playerTest1" )
+//			.withTitle( "Select Player 1" )
+//			.withText( "Selects a player-- order too??" )
+//			.withValue( game.currentPlayerIndex )
+//			.withGame( game );
+//
+//		this.rules.playerTest2 = new VGTPropertyPlayerSelect ( "playerTest2" )
+//			.withTitle( "Select Player 2" )
+//			.withText( "Selects a player-- order too??" )
+//			.withValue( game.currentPlayerIndex )
+//			.withGame( game )
+//			.withDraggable( true );
 
-		this.rules.radTest = new VGTPropertyRadio ( "radtest" )
-			.withTitle( "Radio Test" )
-			.withText( "Less helpful radio input text." )
-			.withValue( 0 )
-			.withOpts( [ "First Option", "Second Option", "Third Option" ] );
-
-		this.rules.playerTest1 = new VGTPropertyPlayerSelect ( "playerTest1" )
-			.withTitle( "Select Player 1" )
-			.withText( "Selects a player-- order too??" )
-			.withValue( game.currentPlayerIndex )
-			.withGame( game );
-
-		this.rules.playerTest2 = new VGTPropertyPlayerSelect ( "playerTest2" )
-			.withTitle( "Select Player 2" )
-			.withText( "Selects a player-- order too??" )
-			.withValue( game.currentPlayerIndex )
+		this.rules.seating = new VGTPropertyPlayerSelect ( "seating" )
+			.withSort( 3 )
+			.withTitle( "Seating" )
+			.withText( "Indicate starting player and seating order." )
+			.withValue( 0 )//game.currentPlayerIndex )
 			.withGame( game )
 			.withDraggable( true );
 

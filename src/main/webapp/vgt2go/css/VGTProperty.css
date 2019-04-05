@@ -1,0 +1,11 @@
+@charset "UTF-8";
+
+/* VGTProperty */
+
+button.vgtpropertyplayerselect.down {
+	border: 2px inset rgb(221,221,221);
+}
+
+button.vgtpropertyplayerselect.dragover {
+	background: #4a4;
+}

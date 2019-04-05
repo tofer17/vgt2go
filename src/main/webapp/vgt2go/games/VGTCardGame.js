@@ -2,27 +2,41 @@
  *
  */
 import { VGTGame } from "./VGTGame.js";
+import { VGTProperty } from "../VGTProperties.js";
 import { Utils } from "../Utils.js";
 
 class VGTCardGame extends VGTGame {
 	constructor ( app, title ) {
 		super( app, title );
 
-		this.gameOpts.opts.jokers = {
-			id : "jokers",
-			text : "Jokers",
-			type : "radio",
-			value : 0,
-			opts : [ "removed", "wild" ]
-		};
+//		this.gameProps.rules.jokers = {
+//			id : "jokers",
+//			text : "Jokers",
+//			type : "radio",
+//			value : 0,
+//			opts : [ "removed", "wild" ]
+//		};
 
-		this.gameOpts.opts.clickDraw = {
-			id : "clickdraw",
-			text : "Click draw",
-			type : "radio",
-			value : 1,
-			opts : [ "First", "Last" ]
-		};
+		this.gameProps.rules.jokers = VGTProperty.make( "radio", "jokers" )
+			.withSort( 10 )
+			.withTitle( "Jokers" )
+			.withValue( 0 )
+			.withOpts( [ "removed", "wild" ] );
+
+//		this.gameProps.rules.clickDraw = {
+//			id : "clickdraw",
+//			text : "Click draw",
+//			type : "radio",
+//			value : 1,
+//			opts : [ "First", "Last" ]
+//		};
+
+//		This is a card-player option
+		this.gameProps.rules.clickDraw = VGTProperty.make( "radio", "clickdraw" )
+			.withSort( 100 )
+			.withTitle( "Click Draw" )
+			.withValue( 0 )
+			.withOpts( [ "First", "Last" ] );
 
 		this.dragHoverClass = "cardHover";
 	};

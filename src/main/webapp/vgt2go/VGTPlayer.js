@@ -46,7 +46,7 @@ class VGTPlayer extends VGTComponent {
 		super.init();
 
 		this.game.addEventListener( "player", this, false );
-		this.game.gameOpts.addEventListener( "change", this, false );
+		this.game.gameProps.addEventListener( "change", this, false );
 
 		const row1 = document.createElement( "div" );
 		row1.classList.add( "vgtplayermetarow" );
@@ -109,7 +109,7 @@ class VGTPlayer extends VGTComponent {
 		super.update();
 		this.meta.playerIndex.innerHTML = this.game.currentPlayerIndex + 1;
 		this.meta.outOf.innerHTML = this.game.getPlayers().length;
-		this.meta.max.innerHTML = this.game.gameOpts.opts.minPlayers.value + "/" + this.game.gameOpts.opts.maxPlayers.value;
+		this.meta.max.innerHTML = this.game.gameProps.rules.minPlayers.value + "/" + this.game.gameProps.rules.maxPlayers.value;
 	};
 
 	addEventListener ( type, listener, useCapture ) {

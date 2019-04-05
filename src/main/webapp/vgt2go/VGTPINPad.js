@@ -179,8 +179,8 @@ class VGTPINPad extends VGTComponent {
 		this.large.appendChild( this.title );
 		this.large.appendChild( t );
 
-		this.node.appendChild( this.small );
-		this.node.appendChild( this.large );
+		this.appendChild( this.small );
+		this.appendChild( this.large );
 
 		if ( this.title == null || this.title.innerHTML.length < 1 ) {
 			this.visible = false;
