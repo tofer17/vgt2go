@@ -27,14 +27,17 @@ class VGTComponent extends EventTarget {
 	};
 
 	init () {
-		if ( this._node != null && !this.hasOwnProperty( "initialized" ) && this.constructor.name != "VGTComponent" ) {
+		//if ( this._node != null && !this.hasOwnProperty( "initialized" ) && this.constructor.name != "VGTComponent" ) {
+		if ( this._node != null && this.initialized == true && this.constructor.name != "VGTComponent" ) {
 			Utils.importCSS( this.constructor.css );
 		}
 	};
 
 	get node () {
 		if ( !this.hasOwnProperty( "initialized" ) ) {
-			Object.defineProperty( this, "initialized", { value : this.init() || true } );
+			//Object.defineProperty( this, "initialized", { value : this.init() || true } );
+			Object.defineProperty( this, "initialized", { value : true } );
+			this.init();
 		}
 
 		return this._node;
