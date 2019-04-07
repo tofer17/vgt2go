@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+<!--<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">-->
+<!--<link href="http://db.onlinewebfonts.com/c/1115bde8eee407cff6cf62ef0943ebde?family=OpenSymbol" rel="stylesheet" type="text/css"/>-->
+
+
+<script>
+/*
+var svgData = null;
+
+function load ( event ) {
+	console.log( event.target.responseText.length );
+	svgData = event.target.responseXML;
+	
+	const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+	svg.setAttribute('style', 'border: 1px solid black');
+	svg.setAttribute('width', '600');
+	svg.setAttribute('height', '250');
+	svg.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
+	
+	document.body.appendChild(svg);
+	
+	svg.innerHTML = svgData.getElementsByTagName( "defs" )[0].outerHTML;
+	svg.innerHTML += svgData.getElementById ( "club_2" ).outerHTML;
+}
+
+function go ( event ) {
+	
+	const xhr = new XMLHttpRequest();
+	xhr.addEventListener( "load", load, false );
+	xhr.open( "GET", "./vgt2go/resources/Svg-cards-2.0.svg" );
+	xhr.send();
+}
+
+var c = 0;
+function hack2 ( event ) {
+	console.log("yup", window.history );
+	//window.removeEventListener( "popstate", hack2 );
+}
+
+function hack3 ( event ) {
+	if ( window.history.state == "vgt2go>main" ) {
+		window.history.pushState( "vgt2go>main>gin", null, null );
+	}
+}
+
+function hackBack ( event ) {
+	
+    history.pushState("vgt2go>main", null, null);
+    window.addEventListener( "popstate", hack2, false );
+//    window.onpopstate = function () {
+//        history.pushState('newjibberish', null, null);
+//        console.log("Hi");
+//        // Handle the back (or forward) buttons here
+//        // Will NOT handle refresh, use onbeforeunload for this.
+//    };
+
+}
+
+//window.addEventListener( "load", go, false );
+window.addEventListener( "load", hackBack, false );
+*/
+
+function requestSVG () {
+	const xhr = new XMLHttpRequest ();
+	xhr.open( "GET", "./vgt2go/resources/Suits.svg", true );
+	xhr.addEventListener( "load", importSVG, false );
+	xhr.send();
+}
+
+function importSVG ( event ) {
+	console.log( event.target.responseXML.querySelector("#clubs") );
+
+	const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+	svg.setAttribute('style', 'border: 1px solid black');
+	svg.setAttribute('width', '128');
+	svg.setAttribute('height', '128');
+	svg.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
+	document.body.appendChild(svg);
+
+	svg.innerHTML = event.target.responseXML.querySelector("#hearts").outerHTML;
+	console.log( document.querySelector( "#hearts") );
+	document.querySelector( "#hearts").style.fill = "#a00";
+	
+	console.log( svg.innerHTML );
+}
+
+function imp () {
+	import("./vgt2go/VGTProperties.js").then( (m) => {testRules(m);});
+	requestSVG();
+}
+
+function testRules ( m ) {
+
+	let players = [];
+	//players = [ {name:"Cm"} ];
+	//players = [ {name:"Cm"}, {name:"Dm"} ];
+	//players = [ {name:"Cm"}, {name:"Dm"}, {name:"Am"} ];
+	players = [ {name:"Cm"}, {name:"Dm"}, {name:"Am"}, {name:"Bella"} ];
+	
+	const game = { players:players,currentPlayerIndex:1 };
+	game.addEventListener = function (a,b,c) {window.addEventListener(a,b,c);};
+	
+	let gameRules = new m.VGTGameProperties( game );
+	
+	document.body.innerHTML = "";
+	document.body.appendChild( gameRules.node );
+	// FIXME: !!!
+	//gameRules.rules.playerTest1.value = 2;
+	
+	const out = document.createElement( "div" );
+	document.body.appendChild( out );
+	
+	
+	gameRules.addEventListener( "change", ( event )=>{
+		
+		out.innerHTML = event.target.id + ":" + event.detail.field + ":" + event.detail.oldValue + " =&gt; " + event.detail.newValue;
+		out.innerHTML += "<br/>" + event.target.value;
+		
+	}, false );
+	
+ 	document.body.appendChild( document.createElement("hr") );
+ 	let btn;
+ 	
+ 	btn = document.createElement( "button" );
+ 	btn.innerHTML = "Dis All";
+ 	btn.onclick = (e) => {
+ 		gameRules.enabled = !gameRules.enabled;
+ 		e.target.innerHTML = gameRules.enabled ? "Dis All" : "Ena All";
+ 	};
+ 	document.body.appendChild( btn );
+ 	
+ 	btn = document.createElement( "button" );
+ 	btn.innerHTML = "Dis min";
+ 	btn.onclick = (e) => {
+ 		gameRules.rules.boolTest.enabled = !gameRules.rules.boolTest.enabled;
+ 		e.target.innerHTML = gameRules.rules.boolTest.enabled ? "Dis min" : "Ena min";
+ 	};
+ 	document.body.appendChild( btn );
+ 	
+ 	btn = document.createElement( "button" );
+ 	btn.innerHTML = "Hide All";
+ 	btn.onclick = (e) => {
+ 		gameRules.visible = !gameRules.visible;
+ 		e.target.innerHTML = gameRules.visible ? "Hide All" : "Display All";
+ 	};
+ 	document.body.appendChild( btn );
+ 	
+ 	btn = document.createElement( "button" );
+ 	btn.innerHTML = "Hide min";
+ 	btn.onclick = (e) => {
+ 		gameRules.rules.boolTest.visible = !gameRules.rules.boolTest.visible;
+ 		e.target.innerHTML = gameRules.rules.boolTest.visible ? "Hide min" : "Display min";
+ 	};
+ 	document.body.appendChild( btn );
+ 	
+ 	btn = document.createElement( "button" );
+ 	btn.innerHTML = "Remove player";
+ 	btn.onclick = (e) => {
+ 		if ( game.players.length == 3 ) {
+ 			game.players.push({name:"bella"});
+ 		} else {
+ 			game.players.pop();
+ 		}
+ 		window.dispatchEvent( new Event("player") );
+ 		e.target.innerHTML = game.players.length == 3 ? "Add Player" : "Remove Player";
+ 	};
+ 	document.body.appendChild( btn );
+ 	
+ 	document.body.appendChild( document.createElement("hr") );
+
+ 	const d = document.createElement( "div" );
+ 	document.body.appendChild( d );
+ 	
+ 	const ranks = ["A","1","2","3","4","5","6","7","8","9","10","J","Q","K"];
+ 	const suits = ["&clubs;","&diams;","&hearts;","&spades;"];
+ 	
+ 	for ( let r of ranks ) {
+ 		const s = document.createElement( "span" );
+		s.innerHTML = r;
+		s.style.color = "#a00";
+		s.onclick = (e)=>{
+			i1.innerHTML = r;
+		};
+		d.appendChild(s);
+ 	}
+ 	d.appendChild( document.createElement("br"));
+ 	for ( let r of suits ) {
+ 		const s = document.createElement( "span" );
+		s.innerHTML = r;
+		s.style.color = "#aa0000!important";
+		//s.style.fontSize = "200px";
+		s.onclick = (e)=>{
+			j1.innerHTML = r;
+			c1.style.color = r == "&clubs;" || r == "&spades;" ? "#000" : "#a00";
+		};
+		d.appendChild(s);
+ 	}
+ 	
+	const c1 = document.createElement( "div" );
+	document.body.appendChild( c1 );
+	
+	//c1.style.display = "inline-block";
+	c1.style.overflow = "hidden";
+		
+	c1.style.width = "100px";
+	c1.style.height = "146px";
+	
+	c1.style.border = "1px solid black";
+	c1.style.borderRadius = "8px";
+	c1.style.boxShadow = "1px 1px rgba(0,0,0,.5)";
+	c1.style.color = "#a00";
+	
+	const i1 = document.createElement( "div" );
+	c1.appendChild( i1 );
+	
+	i1.style.position = "relative";
+ 	i1.style.overflow = "hidden";
+	//i1.style.width = "70px";
+	//i1.style.height = "146px";
+		i1.style.textShadow = "1px 1px rgba(0,0,0,.5)";
+
+	//i1.style.left = "-10px";
+	//i1.style.paddingLeft = "-10px";
+	i1.style.marginTop = "-20px";
+	//i1.style.marginLeft = "-15px";
+	i1.style.zIndex = "2";
+	
+	//i1.style.color = "#a00";
+	i1.style.fontSize = "100px";
+	i1.style.fontWeight = "bold";
+	i1.style.letterSpacing = "-15px"
+	
+	
+	i1.innerHTML = "10";
+ 	
+	const j1 = document.createElement( "div" );
+	c1.appendChild( j1 );
+	
+	j1.style.position = "relative";
+ 	j1.style.overflow = "hidden";
+	//j1.style.width = "70px";
+	//j1.style.height = "146px";
+	
+	//i1.style.left = "-10px";
+	//i1.style.paddingLeft = "-10px";
+	j1.style.marginTop = "-100px";
+	j1.style.marginLeft = "-15px";
+	j1.style.zIndex = "1";
+	
+	j1.style.color = "#800";
+	j1.style.fontSize = "200px";
+	//j1.style.fontWeight = "bold";
+	
+	//j1.innerHTML = "&hearts;";
+	j1.innerHTML = "&#xe00e;";
+	//j1.style.fontFamily = "Wingdings";
+	j1.style.fontFamily = "OpenSymbol";
+ 	
+	
+	var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+	svg.setAttribute('style', 'border: 1px solid black');
+	svg.setAttribute('width', '600');
+	svg.setAttribute('height', '250');
+	svg.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
+	document.body.appendChild(svg);
+	//svg.innerHTML = '<g fill="#a00" transform="scale(2.0)" xmlns="http://www.w3.org/2000/svg"> <path d="M6.789,38.05c4.007,0,6.117-4.271,7.221-8.541c1.104-4.27,1.2-8.54,1.2-8.54l2.039-0.024c0,0,0.384,17.105,8.397,17.105    H6.789z"/> <path d="M0,20.944C0.023,12.619,12.522,6.574,16.193,0c3.671,6.598,16.17,12.644,16.194,20.944c0,3.935-3.623,7.125-8.109,7.125    c-4.462,0-8.085-3.19-8.085-7.125c0,3.935-3.623,7.125-8.109,7.125S0,24.879,0,20.944z"/> </g>';
+	//svg.innerHTML = '<g transform="scale(2.0)"><path fill="red" d="M3,10 L10,0 L17,10 L10,20 L3,10" /></g>';
+	svg.innerHTML = '<g transform="scale(4.0)"> <path stroke-linecap="butt" fill="#a00" d="M123.148,20.524c6.142,0,12.284,0,18.425,0c-2.099-0.093-3.885-1.451-5.57-2.573 c-3.789-2.858-7.337-6.135-10.139-9.969c-1.309-1.929-2.682-4.098-2.716-6.506 M141.573,20.524 c-2.663,0.084-4.938,1.779-6.967,3.343c-3.587,3.011-6.691,6.593-9.312,10.47c-0.962,1.605-2.094,3.306-2.147,5.236 c0-6.35,0-12.697,0-19.049 M123.148,39.573c-0.091-2.835-1.818-5.292-3.45-7.484c-2.908-3.623-6.353-6.828-10.144-9.508 c-1.473-0.919-3.037-2.012-4.832-2.057c6.142,0,12.284,0,18.425,0 M104.723,20.524c2.663-0.083,4.938-1.777,6.967-3.339 c3.586-3.013,6.691-6.595,9.311-10.472c0.962-1.605,2.093-3.306,2.147-5.237c0,6.351,0,12.699,0,19.048Z"/> </g>';
+	
+/*  	
+ 	const pDiv = document.createElement( "div" );
+
+	for ( let i = 0; i < players.length; i++ ) {
+		const p = players[i];
+		const btn = document.createElement( "button" );
+		btn.innerHTML = p.name;
+		btn.playerIndex = i;
+		btn.classList.toggle( "buf", ( game.currentPlayerIndex == i ) );
+		btn.addEventListener( "click", (e)=>{
+			//e.stopPropagation();
+			const sibs = e.target.parentElement.querySelectorAll( "button" );
+			for ( let i = 0; i < sibs.length; i++ ) {
+				sibs[i].classList.toggle( "buf", ( e.target.playerIndex == i ) );
+			}
+			game.playerIndex = e.target.playerIndex;
+		}, false );
+		
+		pDiv.appendChild( btn );
+	}
+	
+	pDiv.addEventListener( "click", (e)=>{
+		console.log(e);
+	}, false);
+
+	document.body.appendChild( pDiv );
+ */
+ 
+ }
+
+window.addEventListener( "load", imp, false );
+
+
+
+</script>
+
+<style>
+@font-face {font-family: "OpenSymbol";
+	src: local("OpenSymbol"),
+    src: url("http://db.onlinewebfonts.com/t/1115bde8eee407cff6cf62ef0943ebde.eot"); /* IE9*/
+    src: url("http://db.onlinewebfonts.com/t/1115bde8eee407cff6cf62ef0943ebde.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+    url("http://db.onlinewebfonts.com/t/1115bde8eee407cff6cf62ef0943ebde.woff2") format("woff2"), /* chrome firefox */
+    url("http://db.onlinewebfonts.com/t/1115bde8eee407cff6cf62ef0943ebde.woff") format("woff"), /* chrome firefox */
+    url("http://db.onlinewebfonts.com/t/1115bde8eee407cff6cf62ef0943ebde.ttf") format("truetype"), /* chrome firefox opera Safari, Android, iOS 4.2+*/
+    url("http://db.onlinewebfonts.com/t/1115bde8eee407cff6cf62ef0943ebde.svg#OpenSymbol") format("svg"); /* iOS 4.1- */
+}
+
+
+/* 
+	bkg  = 2178 1216
+	card =  168  244
+*/
+
+#hand {
+}
+.c1 {
+	width: 100px;
+	height: 146px;
+	border: 1px solid gray;
+	margin-left: -40px;
+	position: relative;
+	float:left;
+	background: url("./vgt2go/resources/Svg-cards-2.0.png");
+	background-size: 1300px 730px;
+}
+
+#ace {
+	background-position: 0px -146px;
+}
+
+
+#Xc1 {
+	display: inline-block;
+	width: 168px;
+	height: 244px;
+	background: url("./vgt2go/resources/Svg-cards-2.0.png") 0px -243px;
+	background-size: 84px 122px;
+}
+
+.buf {
+	border: 2px inset rgb(221,221,221);
+}
+
+.Xtoggle {
+    padding: 5px;
+    background: #DDD;
+    border-top: 2px solid #CCC;
+    border-left: 2px solid #CCC;
+    border-right: 2px solid #555;
+    border-bottom: 2px solid #555;
+}
+
+.toggle.down {
+    border-top: 2px solid #555;
+    border-left: 2px solid #555;
+    border-right: 2px solid #CCC;
+    border-bottom: 2px solid #CCC;
+}
+</style>
+</head>
+<body>
+<button onclick="hack3();">b</button>
+<div id="hand" style="margin-left:50px">
+
+<div class="c1" style="xmargin-left:0px;background-position: 0px -146px;"></div>
+<div class="c1" style="background-position: -100px 0px;"></div>
+<div class="c1" style="background-position: -200px -292px;"></div>
+<div class="c1" style="background-position: -300px -438px;"></div>
+<div class="c1" style="background-position: -400px -146px;"></div>
+<div class="c1" style="background-position: -500px -292px;"></div>
+<div class="c1" style="background-position: -600px -146px;"></div>
+<div class="c1" style="background-position: -700px -146px;"></div>
+<div class="c1" style="background-position: -800px -146px;"></div>
+<div class="c1" style="background-position: -900px -146px;"></div>
+<div class="c1" style="background-position: -1200px -438px;"></div>
+<div style="clear:both"></div>
+</div><!--<p style="clear:both">&nbsp;</p>-->
+<!--
+<table>
+<tr>
+<td><div class="c1"></div></td>
+<td><div class="c1"></div></td>
+<td><div class="c1"></div></td>
+<td><div class="c1"></div></td>
+<td><div class="c1"></div></td>
+<td><div class="c1"></div></td>
+<td><div class="c1"></div></td>
+<td><div class="c1"></div></td>
+<td><div class="c1"></div></td>
+<td><div class="c1"></div></td>
+<td><div class="c1"></div></td>
+</tr>
+</table>
+-->
+<hr/>
+168 245
+</body>
+</html>
