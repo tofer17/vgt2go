@@ -258,6 +258,8 @@ function debugCard ( debug, card ) {
 }
 
 const GlobalVGTCard = {};
-window.vgt.GlobalVGTCard = GlobalVGTCard;
+if ( window.vgt ) {
+	window.vgt.GlobalVGTCard = GlobalVGTCard;
+}
 
 export { VGTCard, VGTCardEvent };
