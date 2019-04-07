@@ -28,7 +28,7 @@ class VGTComponent extends EventTarget {
 
 	init () {
 		//if ( this._node != null && !this.hasOwnProperty( "initialized" ) && this.constructor.name != "VGTComponent" ) {
-		if ( this._node != null && this.initialized == true && this.constructor.name != "VGTComponent" ) {
+		if ( this._node != null && this.initialized == true && this.constructor.name != "VGTComponent" && this.constructor.css ) {
 			Utils.importCSS( this.constructor.css );
 		}
 	};
