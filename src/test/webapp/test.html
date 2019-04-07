@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<title>Insert title here</title>
+<title>Test</title>
 <!--<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">-->
 <!--<link href="http://db.onlinewebfonts.com/c/1115bde8eee407cff6cf62ef0943ebde?family=OpenSymbol" rel="stylesheet" type="text/css"/>-->
 
@@ -88,9 +88,13 @@ function importSVG ( event ) {
 	console.log( svg.innerHTML );
 }
 
-function imp () {
+function Ximp () {
 	import("./vgt2go/VGTProperties.js").then( (m) => {testRules(m);});
 	requestSVG();
+}
+
+function imp () {
+	import("./vgt2go/VGTCardTest.js");
 }
 
 function testRules ( m ) {
@@ -372,6 +376,7 @@ window.addEventListener( "load", imp, false );
 </style>
 </head>
 <body>
+<!--
 <button onclick="hack3();">b</button>
 <div id="hand" style="margin-left:50px">
 
@@ -387,7 +392,9 @@ window.addEventListener( "load", imp, false );
 <div class="c1" style="background-position: -900px -146px;"></div>
 <div class="c1" style="background-position: -1200px -438px;"></div>
 <div style="clear:both"></div>
-</div><!--<p style="clear:both">&nbsp;</p>-->
+</div>
+-->
+<!--<p style="clear:both">&nbsp;</p>-->
 <!--
 <table>
 <tr>
@@ -405,7 +412,5 @@ window.addEventListener( "load", imp, false );
 </tr>
 </table>
 -->
-<hr/>
-168 245
 </body>
 </html>
