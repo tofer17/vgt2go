@@ -223,11 +223,11 @@ class VGTGin extends VGTCardGame {
 		this.shiftCurrentPlayer( 1, false );
 
 		this.ginButton.disabled = true;
-		// FIXME: Check for empty deck and shuffle.
 
+		// FIXME: deal from bottom, not top. Or whatever.
 		if ( this.deck.length < 1 ) {
 	console.error("Shuffle!");
-			while ( this.discards.length > 0 ) {
+			while ( this.discards.length > 1 ) {
 				const card = this.discards.deal(1);
 				card.faceUp = false;
 				this.deck.add( card );
