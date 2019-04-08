@@ -1,10 +1,9 @@
-/**
- *
- */
-
 import { VGTComponent } from "./VGTComponent.js";
 import { VGTEvent } from "./VGTEvent.js";
 
+/**
+*
+*/
 
 class VGTPropertyEvent extends VGTEvent {
 	constructor ( type, field, oldValue, newValue ) {
@@ -629,5 +628,4 @@ class VGTPlayerProperties extends VGTProperties {
 }
 
 
-//export { VGTPropertyNumber, VGTPropertySelect, VGTPropertyRadio, VGTProperties, VGTGameProperties };
 export { VGTProperty, VGTAppProperties, VGTGameProperties, VGTPlayerProperties };

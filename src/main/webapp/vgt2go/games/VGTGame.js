@@ -1,14 +1,14 @@
-/**
- *
- */
 import { VGTComponent } from "../VGTComponent.js";
-//import { VGTGameOpts } from "../VGTGameOpts.js";
 import { VGTGameProperties } from "../VGTProperties.js";
 import { VGTPlayer } from "../VGTPlayer.js";
 import { VGTStartControls } from "../VGTStartControls.js";
 import { VGTPINPad } from "../VGTPINPad.js";
 import { Utils } from "../Utils.js";
 import { VGTEvent } from "../VGTEvent.js";
+
+/**
+*
+*/
 
 class VGTGameEvent extends VGTEvent {
 	constructor( type, change, player ) {

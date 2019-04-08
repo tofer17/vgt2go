@@ -1,8 +1,9 @@
-/**
- *
- */
 import { VGTComponent } from "./VGTComponent.js";
 import { VGTEvent } from "./VGTEvent.js";
+
+/**
+*
+*/
 
 class VGTPINPadEvent extends VGTEvent {
 	constructor ( type ) {

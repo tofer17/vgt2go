@@ -1,10 +1,10 @@
-/**
- *
- */
 import { VGTComponent } from "./VGTComponent.js";
 import { VGTPINPad } from "./VGTPINPad.js";
 import { VGTEvent } from "./VGTEvent.js";
 
+/**
+*
+*/
 
 class VGTPlayerEvent extends VGTEvent {
 	constructor ( type ) {

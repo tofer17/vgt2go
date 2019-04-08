@@ -1,7 +1,3 @@
-/**
- *
- */
-
 import { VGTCardGroup } from "../VGTCardGroup.js";
 import { VGTCardTable } from "../VGTCardTable.js";
 import { VGTComponent } from "../VGTComponent.js";
@@ -9,6 +5,9 @@ import { VGTCardGame } from "./VGTCardGame.js";
 import { VGTProperty } from "../VGTProperties.js";
 import { VGTPlayer } from "../VGTPlayer.js";
 
+/**
+*
+*/
 
 class VGTGinTable extends VGTCardTable {
 	constructor ( stockPile, discardPile ) {

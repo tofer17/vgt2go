@@ -1,9 +1,10 @@
-/**
- *
- */
 import { VGTComponent  } from "./VGTComponent.js";
 import { VGTCard } from "./VGTCard.js";
 import { VGTEvent } from "./VGTEvent.js";
+
+/**
+*
+*/
 
 const _TYPES = { FaceDown : "FD", RTL : "RTL", FaceUp : "FU" };
 

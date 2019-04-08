@@ -1,9 +1,10 @@
-/**
- *
- */
 import { VGTComponent } from "./VGTComponent.js";
 import { AVAILABLE_GAMES } from "./games/Available.js";
 import { VGTEvent } from "./VGTEvent.js";
+
+/**
+*
+*/
 
 /*
  * Displays:

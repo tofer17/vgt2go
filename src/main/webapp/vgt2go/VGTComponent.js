@@ -1,8 +1,9 @@
-/**
- *
- */
 import { VGTEvent } from "./VGTEvent.js";
 import { Utils } from "./Utils.js";
+
+/**
+*
+*/
 
 class VGTComponent extends EventTarget {
 	constructor ( tagName, id, ...classes ) {
@@ -27,7 +28,6 @@ class VGTComponent extends EventTarget {
 	};
 
 	init () {
-		//if ( this._node != null && !this.hasOwnProperty( "initialized" ) && this.constructor.name != "VGTComponent" ) {
 		if ( this._node != null && this.initialized == true && this.constructor.name != "VGTComponent" && this.constructor.css ) {
 			Utils.importCSS( this.constructor.css );
 		}
@@ -35,7 +35,6 @@ class VGTComponent extends EventTarget {
 
 	get node () {
 		if ( !this.hasOwnProperty( "initialized" ) ) {
-			//Object.defineProperty( this, "initialized", { value : this.init() || true } );
 			Object.defineProperty( this, "initialized", { value : true } );
 			this.init();
 		}
@@ -70,7 +69,6 @@ class VGTComponent extends EventTarget {
 	dispatchEvent ( event, init ) {
 
 		if ( typeof( event ) == "string" ) {
-			console.warn("yay");
 			return super.dispatchEvent( new VGTEvent( event, init ) );
 		}
 

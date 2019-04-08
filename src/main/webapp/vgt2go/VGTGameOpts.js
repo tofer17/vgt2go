@@ -1,9 +1,9 @@
-/**
- *
- */
-
 import { VGTComponent } from "./VGTComponent.js";
 import { VGTEvent } from "./VGTEvent.js";
+
+/**
+*
+*/
 
 class VGTGameOptsEvent extends VGTEvent {
 	constructor ( type, opt ) {

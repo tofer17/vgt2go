@@ -1,8 +1,8 @@
-/**
- *
- */
-
 import { VGTComponent } from "./VGTComponent.js"
+
+/**
+*
+*/
 
 class VGTTable extends VGTComponent {
 	constructor () {

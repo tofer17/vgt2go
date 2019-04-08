@@ -1,9 +1,10 @@
-/**
- *
- */
 import { VGTGame } from "./VGTGame.js";
 import { VGTProperty } from "../VGTProperties.js";
 import { Utils } from "../Utils.js";
+
+/**
+*
+*/
 
 class VGTCardGame extends VGTGame {
 	constructor ( app, title ) {

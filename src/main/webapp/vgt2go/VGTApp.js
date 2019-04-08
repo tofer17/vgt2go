@@ -1,10 +1,11 @@
+import { VGTComponent } from "./VGTComponent.js";
+import { VGTGameSelector } from "./VGTGameSelector.js";
+
 /**
  * List games to create and resume.
  * Create that game or load it.
  *
  */
-import { VGTComponent } from "./VGTComponent.js";
-import { VGTGameSelector } from "./VGTGameSelector.js";
 
 class VGTApp extends VGTComponent {
 	constructor () {

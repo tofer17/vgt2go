@@ -89,6 +89,8 @@ class VGTCard extends VGTComponent {
 		this.height = CARDPNGDIMS.height / 5;
 
 		this.canClick = true;
+
+		this.design = 0;
 	};
 
 	get faceUp () {
@@ -140,8 +142,10 @@ class VGTCard extends VGTComponent {
 
 		this.node.card = this;
 
-		if ( !GlobalVGTCard.stylesheet ) {
+		if ( this.design == 0 && !GlobalVGTCard.stylesheet ) {
 			VGTCard.setCardStyle( this.width + "px", this.height + "px", "../resources/Cards_1a.png", CARDPNGDIMS.width + "px", CARDPNGDIMS.height + "px" );
+		} else if  ( this.design == 1 && !GlobalVGTCard.stylesheet ) {
+			VGTCard.setCardStyle( this.width + "px", this.height + "px", "../resources/Cards_1b.png", CARDPNGDIMS.width + "px", CARDPNGDIMS.height + "px" );
 		}
 	};
 
