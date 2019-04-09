@@ -98,6 +98,7 @@ class VGTCard extends VGTComponent {
 	};
 
 	set faceUp ( faceUp ) {
+		const fireEvent = this.facingUp != faceUp;
 		this.facingUp = faceUp;
 
 		if ( this.suit == EMPTY_SUIT ) {
@@ -107,18 +108,22 @@ class VGTCard extends VGTComponent {
 			this.node.classList.remove( "blacksuit" );
 			this.node.classList.add( "backsuit" );
 			this.node.id = "";
-			this.node.style.backgroundPosition = ( ( CARDBACKPOS.x ) * ( -1 * this.width ) ) + "px " + ( ( CARDBACKPOS.y ) * ( -1 * this.height ) ) + "px";
+			//this.node.style.backgroundPosition = ( ( CARDBACKPOS.x ) * ( -1 * this.width ) ) + "px " + ( ( CARDBACKPOS.y ) * ( -1 * this.height ) ) + "px";
 		} else {
 			this.node.innerHTML = "";
 			this.node.classList.remove( "backsuit" );
 			this.node.classList.add( this.suit.color + "suit" );
 			this.node.id = "vgtcard-" + this.rank.id + this.suit.id;
 			if ( this.suit != JOKER_SUIT ) {
-				this.node.style.backgroundPosition = ( ( this.rank.order - 1 ) * ( -1 * this.width ) ) + "px " + ( ( this.suit.order - 1 ) * ( -1 * this.height ) ) + "px";
+				//this.node.style.backgroundPosition = ( ( this.rank.order - 1 ) * ( -1 * this.width ) ) + "px " + ( ( this.suit.order - 1 ) * ( -1 * this.height ) ) + "px";
 			} else {
 				// FIXME: Ideally this should be reflected properly in Joker rank/suit.
 				this.node.style.backgroundPosition = ( ( this.rank.order - 101 ) * ( -1 * this.width ) ) + "px " + ( ( 4 ) * ( -1 * this.height ) ) + "px";
 			}
+		}
+
+		if ( fireEvent ) {
+			this.dispatchEvent( new VGTCardEvent( "change" ) );
 		}
 	};
 
@@ -142,11 +147,13 @@ class VGTCard extends VGTComponent {
 
 		this.node.card = this;
 
-		if ( this.design == 0 && !GlobalVGTCard.stylesheet ) {
-			VGTCard.setCardStyle( this.width + "px", this.height + "px", "../resources/Cards_1a.png", CARDPNGDIMS.width + "px", CARDPNGDIMS.height + "px" );
-		} else if  ( this.design == 1 && !GlobalVGTCard.stylesheet ) {
-			VGTCard.setCardStyle( this.width + "px", this.height + "px", "../resources/Cards_1b.png", CARDPNGDIMS.width + "px", CARDPNGDIMS.height + "px" );
-		}
+		this.node.style.width = this.width + "px";
+		this.node.style.height = this.height + "px";
+//		if ( this.design == 0 && !GlobalVGTCard.stylesheet ) {
+//			VGTCard.setCardStyle( this.width + "px", this.height + "px", "../resources/Cards_1a.png", CARDPNGDIMS.width + "px", CARDPNGDIMS.height + "px" );
+//		} else if  ( this.design == 1 && !GlobalVGTCard.stylesheet ) {
+//			VGTCard.setCardStyle( this.width + "px", this.height + "px", "../resources/Cards_1b.png", CARDPNGDIMS.width + "px", CARDPNGDIMS.height + "px" );
+//		}
 	};
 
 	get draggable () {
