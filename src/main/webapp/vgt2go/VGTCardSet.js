@@ -98,30 +98,45 @@ class VGTCardSet extends VGTComponent {
 	};
 
 	/**
-	 * Deals count number of cards from the top or bottom of the deck.
+	 * Deals count number (or all) of cards from the top or bottom of the deck.
 	 *
 	 * @this {VGTCardSet}
 	 * @param {number}
 	 *            count The number of cards to deal. If count is positive, the
 	 *            cards will be taken from the top of the deck (shift); if the
 	 *            number is negative, the cards will be taken from the bottom of
-	 *            the deck (pop).
-	 * @return {Array} An array of cards if more than one was request
+	 *            the deck (pop). And if count is 0, then ALL cards are dealt
+	 *            off (from the top)!
+	 * @return {Array} An array of cards (and only so many) if more than one was
+	 *         requested.
+	 * @throws Error
+	 *             When count is null.
 	 */
 	deal ( count ) {
-		if ( count == null || count == 0 ) {
-			throw "Count cannot be 0: '" + count + "'";
+		if ( count == null ) {
+			throw "Count cannot be null";
 		}
 
 		this._beSilent = true;
 		const ret = [];
+
+		if ( count == 0 ) {
+			count = this.cards.length;
+		}
+
 		if ( count > 0 ) {
 			for ( let i = 0; i < count; i++ ) {
 				ret.push( this.cards.shift() );
+				if ( this.cards.length == 0 ) {
+					break;
+				}
 			}
 		} else {
 			for ( let i = count; i < 0; i++ ) {
 				ret.push( this.cards.pop() );
+				if ( this.cards.length == 0 ) {
+					break;
+				}
 			}
 		}
 
